@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('novel_setting_templates', function (Blueprint $table) {
+        Schema::create('shortcuts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('writing_size');
-            $table->unsignedInteger('preview_size');
-            $table->unsignedInteger('font_size');
-            $table->unsignedBigInteger('user_id'); /* usesテーブルのリレーション */
+            $table->string('name');
+            $table->string('function');
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
+            $table->foreignId('user_id')->constrained('users');
         });
     }
 
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('novel_setting_templates');
+        Schema::dropIfExists('shortcuts');
     }
 };

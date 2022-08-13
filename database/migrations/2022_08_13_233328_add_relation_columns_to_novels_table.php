@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('series', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('user_id'); /* usesテーブルのリレーション */
-            $table->timestamps();
-            $table->softDeletes($column = 'deleted_at', $precision = 0);
+        Schema::table('novels', function (Blueprint $table) {
+            $table->foreignId('series_id')->nullable()->constrained('series');
+            $table->foreignId('output_setting_template_id')->constrained('output_setting_templates');
         });
     }
 
@@ -29,6 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('series');
+        Schema::table('novels', function (Blueprint $table) {
+            //
+        });
     }
 };

@@ -20,5 +20,15 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        $this->call([ /* この順番で入れないとエラーが発生するので注意 */
+            UserSeeder::class,
+            SeriesSeeder::class,
+            OutputSettingTemplateSeeder::class,
+            NovelSeeder::class,
+            NovelSettingTemplateSeeder::class,
+            ShortcutSeeder::class,
+            FunctionButtonSeeder::class,
+        ]);
     }
 }

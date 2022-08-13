@@ -17,12 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->mediumText('body');
-            $table->unsignedBigInteger('user_id'); /* usesテーブルのリレーション */
-            $table->unsignedBigInteger('series_id'); /* seriesテーブルのリレーション */
-            $table->unsignedBigInteger('output_setting_template_id'); /* output_setting_templatesテーブルのリレーション */
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
+            $table->foreignId('user_id')->constrained('users');
         });
     }
 

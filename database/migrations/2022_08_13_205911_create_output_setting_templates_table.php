@@ -17,16 +17,17 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('paper_size_height');
             $table->unsignedInteger('paper_size_width');
-            $table->unsignedInteger('font_size');
-            $table->unsignedInteger('row_num');
-            $table->unsignedInteger('font_num');
+            $table->unsignedDecimal('font_size', $precision = 4, $scale = 1);
+            $table->unsignedDecimal('between_line_size', $precision = 4, $scale = 1);
+            $table->unsignedInteger('row_num_per_page');
+            $table->unsignedInteger('font_num_per_row');
             $table->unsignedInteger('margin_inner');
             $table->unsignedInteger('margin_outer');
             $table->unsignedInteger('margin_top');
             $table->unsignedInteger('margin_bottom');
-            $table->unsignedBigInteger('user_id'); /* usesテーブルのリレーション */
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
+            $table->foreignId('user_id')->constrained('users');
         });
     }
 

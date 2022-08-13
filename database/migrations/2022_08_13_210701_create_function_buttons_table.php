@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('function');
-            $table->unsignedBigInteger('user_id'); /* usesテーブルのリレーション */
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
+            $table->foreignId('user_id')->constrained('users');
         });
     }
 
