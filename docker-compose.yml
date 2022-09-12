@@ -94,16 +94,28 @@ services:
             - sail
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
-        links:
-            - mysql:mysql
-        ports:
-            - 8080:80
         environment:
             PMA_USER: "${DB_USERNAME}"
             PMA_PASSWORD: "${DB_PASSWORD}"
             PMA_HOST: mysql
+        ports:
+            - 8080:80
+        volumes:
+            - ./infra/docker/phpmyadmin/sessions:/sessions
         networks:
             - sail
+        depends_on:
+            - mysql
+    redisinsight:
+        image: redislabs/redisinsight:latest
+        ports:
+            - "8001:8001"
+        volumes:
+            - ./infra/docker/redisinsight:/db
+        networks:
+            - sail
+        depends_on:
+            - redis
 networks:
     sail:
         driver: bridge

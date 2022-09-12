@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Redis;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +23,22 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/novel/editor', function () {
+    return Inertia::render('NovelEditor');
+})->middleware(['auth', 'verified'])->name('novelEditor');
+
+Route::post('/novels', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('novelSave');
+
+// Route::get('/test', function(){
+//     return Redis::incr('visit');
+// });
 
 require __DIR__.'/auth.php'; /* auth関係のルーティングを呼び出し(基本はweb.php) */

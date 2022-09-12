@@ -81,7 +81,7 @@ const submit = () => {
                     :href="route('password.request')"
                     class="mr-5 underline text-sm text-gray-600 hover:text-gray-900"
                 >
-                    Forgot your password?
+                    Forgot your psassword?
                 </Link>
 
                 <BreezeButton
