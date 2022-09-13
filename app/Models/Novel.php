@@ -9,6 +9,13 @@ class Novel extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'body',
+        'user_id',
+        'output_setting_template_id',
+    ];
+
     /* Relation */
     public function user()
     {

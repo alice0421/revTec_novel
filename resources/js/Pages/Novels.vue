@@ -1,25 +1,25 @@
 <script setup>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
+
+defineProps({
+    novels: Array,
+});
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Novels" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
+                小説一覧
             </h2>
         </template>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
-                        You're logged in!
-                    </div>
-                </div>
+        <div class="bg-white py-2 px-2 h-full sm:px-4 lg:px-6">
+            ここに小説が並ぶ
+            <div v-for="novel in novels" :key="novel.id">
+                <p>{{ novel.title }}：{{ novel.body }}</p>
             </div>
         </div>
     </BreezeAuthenticatedLayout>

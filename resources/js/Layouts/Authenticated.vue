@@ -20,7 +20,7 @@ const showingNavigationDropdown = ref(false);
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('home')">
                                     <BreezeApplicationLogo
                                         class="block h-9 w-auto"
                                     />
@@ -32,14 +32,14 @@ const showingNavigationDropdown = ref(false);
                                 class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
                             >
                                 <BreezeNavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
+                                    :href="route('novels')"
+                                    :active="route().current('novels')"
                                 >
                                     小説一覧
                                 </BreezeNavLink>
                                 <BreezeNavLink
-                                    :href="route('novelEditor')"
-                                    :active="route().current('novelEditor')"
+                                    :href="route('novelCreate')"
+                                    :active="route().current('novelCreate')"
                                 >
                                     新規小説作成
                                 </BreezeNavLink>
@@ -140,14 +140,14 @@ const showingNavigationDropdown = ref(false);
                 >
                     <div class="pt-2 pb-3 space-y-1">
                         <BreezeResponsiveNavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
+                            :href="route('novels')"
+                            :active="route().current('novels')"
                         >
-                            Dashboard
+                            小説一覧
                         </BreezeResponsiveNavLink>
                         <BreezeResponsiveNavLink
-                            :href="route('novelEditor')"
-                            :active="route().current('novelEditor')"
+                            :href="route('novelCreate')"
+                            :active="route().current('novelCreate')"
                         >
                             新規小説作成
                         </BreezeResponsiveNavLink>
@@ -176,7 +176,6 @@ const showingNavigationDropdown = ref(false);
                     </div>
                 </div>
             </nav>
-
             <!-- Page Heading -->
             <header
                 class="bg-white border-b border-gray-200"

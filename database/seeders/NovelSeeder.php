@@ -21,5 +21,29 @@ class NovelSeeder extends Seeder
             'user_id' => 1,
             'output_setting_template_id' => 1,
         ]);
+        Novel::create([
+            'title' => 'Title02',
+            'body' => 'Body02',
+            'user_id' => 1,
+            'output_setting_template_id' => 1,
+        ]);
+        Novel::create([
+            'title' => 'Title03',
+            'body' => 'Body03',
+            'user_id' => 1,
+            'output_setting_template_id' => 1,
+        ]);
+        Novel::create([
+            'title' => 'Title04',
+            'body' => 'Body04',
+            'user_id' => 1,
+            'output_setting_template_id' => 1,
+        ]);
+        Novel::create([
+            'title' => 'Title05',
+            'body' => 'Body05',
+            'user_id' => 1,
+            'output_setting_template_id' => 1,
+        ]);
     }
 }
