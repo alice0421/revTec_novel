@@ -110,7 +110,7 @@ const submit = () => {
             </form>
         </template>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="h-full">
             <div class="bg-white py-2 px-2 h-full sm:px-4 lg:px-6">
                 <div class="grid grid-rows-6 grid-cols-7 gap-2 h-full">
                     <div
