@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 傍点 */
+span.dot {
+    -webkit-text-emphasis: filled circle black;
+    text-emphasis: filled circle black;
+}

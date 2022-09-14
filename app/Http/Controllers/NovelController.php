@@ -39,8 +39,6 @@ class NovelController extends Controller
             'user_id' => $request->user_id,
             'output_setting_template_id' => $request->output_setting_template_id,
         ]);
-
-        return redirect(RouteServiceProvider::HOME);
     }
 
     // 既存小説編集
