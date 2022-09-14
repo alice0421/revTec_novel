@@ -33,23 +33,45 @@ class NovelController extends Controller
             'output_setting_template_id' => 'required'
         ]);
 
-        $novel->create([
+        $newNovel = $novel->create([
             'title' => $request->title,
             'body' => $request->body,
             'user_id' => $request->user_id,
             'output_setting_template_id' => $request->output_setting_template_id,
+        ]);
+
+        return Inertia::render('NovelEdit',[
+            'id' => $newNovel->id,
+            'title' => $newNovel->title,
+            'body' => $newNovel->body,
+            'user_id' => $newNovel->user_id,
+            'output_setting_template_id' => $newNovel->output_setting_template_id,
         ]);
     }
 
     // 既存小説編集
     public function edit(Novel $novel)
     {
-
+        return Inertia::render('NovelEdit');
     }
 
     // 既存小説保存
-    public function update(Novel $novel)
+    public function update(Novel $novel, Request $request)
     {
+        $request->validate([
+            'id' => 'required',
+            'title' => 'required|string',
+            'body' => 'required|string',
+            'user_id' => 'required',
+            'output_setting_template_id' => 'required'
+        ]);
+
+        $novel->where('id', $request->id)->update([
+            'title' => $request->title,
+            'body' => $request->body,
+            'user_id' => $request->user_id,
+            'output_setting_template_id' => $request->output_setting_template_id,
+        ]);
 
     }
 }

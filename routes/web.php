@@ -44,11 +44,11 @@ Route::get('/novels/create', [NovelController::class, 'create'])
 ->name('novelCreate');
 
 // 新規小説保存
-Route::post('/novels/store', [NovelController::class, 'store'])
+Route::post('/novels/edit', [NovelController::class, 'store'])
 ->name('novelStore');
 
 // 既存小説編集
-Route::post('/novels/edit', [NovelController::class, 'edit'])
+Route::get('/novels/edit', [NovelController::class, 'edit'])
 ->name('novelEdit');
 
 // 既存小説保存

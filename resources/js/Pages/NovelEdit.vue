@@ -5,17 +5,28 @@ import { ref, computed } from "vue";
 
 const user = usePage().props.value.auth.user.id; // user_idを取得
 
+const props = defineProps({
+    id: String,
+    title: String,
+    body: String,
+    user_id: Number,
+    output_setting_template_id: Number,
+});
+
+console.log(props.id);
+
 const form = useForm({
-    title: "吾輩は猫である",
-    body: "｜＃「吾輩は猫である」冒頭＃\n\n｜吾輩《わがはい》は｜【猫】である。名前はまだ無い。どこで生れたか｜頓《とん》と見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番｜獰悪《どうあく》な種族であったそうだ。この書生というのは時々我々を｜捕《つかま》えて煮て食うという話である。しかしその当時は何という｜考《かんがえ》もなかったから別段恐しいとも思わなかった。ただ彼の｜掌《てのひら》に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。掌の上で少し落ち付いて書生の顔を見たのがいわゆる人間というものの見始であろう。この時妙なものだと思った感じが今でも残っている。第一毛を以て装飾されべきはずの顔がつるつるしてまるで｜薬缶《やかん》だ。その後猫にも大分｜逢《あ》ったがこんな片輪には一度も｜出会《でく》わした事がない。のみならず顔の真中が余りに突起している。そうしてその穴の中から時々ぷうぷうと｜烟《けむり》を吹く。どうも｜咽《む》せぽくて実に弱った。これが人間の飲む｜烟草《タバコ》というものである事は｜漸《ようや》くこの｜頃《ごろ》知った。",
-    user_id: user,
-    output_setting_template_id: "1",
+    id: props.id,
+    title: props.title,
+    body: props.body,
+    user_id: props.user_id,
+    output_setting_template_id: props.output_setting_template_id,
 });
 
 // 保存機能
 const submit = (e) => {
     e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
-    form.post(route("novelStore"), {});
+    form.post(route("novelUpdate"), {});
 };
 
 // 記号挿入機能
@@ -45,7 +56,7 @@ const showPreview = computed(() => {
 
 <!-- BreezeAuthenticatedLayout内にログアウトのsubmitがあるため、form分割 -->
 <template>
-    <Head title="NovelCreate" />
+    <Head title="NovelEdit" />
     <BreezeAuthenticatedLayout>
         <template #header>
             <form @submit.prevent="submit" class="h-full">

@@ -47,6 +47,12 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
+                            <div
+                                v-show="route().current('novelEdit')"
+                                class="inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out"
+                            >
+                                小説執筆中
+                            </div>
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
                                 <BreezeDropdown align="right" width="48">
