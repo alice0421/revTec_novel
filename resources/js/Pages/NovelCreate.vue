@@ -13,7 +13,8 @@ const form = useForm({
 });
 
 // 保存機能
-const submit = () => {
+const submit = (e) => {
+    e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
     form.post(route("novelStore"), {});
 };
 

@@ -26,11 +26,11 @@ class NovelController extends Controller
     // 新規小説保存
     public function store(Novel $novel, Request $request)
     {
-        //dd($request->title, $request->body);
-
         $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
+            'user_id' => 'required',
+            'output_setting_template_id' => 'required'
         ]);
 
         $novel->create([
