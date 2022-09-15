@@ -12,7 +12,7 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
-        <div class="h-screen bg-gray-100">
+        <div class="w-screen h-screen bg-gray-100">
             <nav class="bg-white border-b border-gray-300">
                 <!-- Primary Navigation Menu -->
                 <div class="h-10 mx-auto px-2 sm:h-16 sm:px-4 lg:px-6">
@@ -195,7 +195,7 @@ const showingNavigationDropdown = ref(false);
             </header>
 
             <!-- Page Content -->
-            <main class="h-[calc(100vh-82px)] sm:h-[calc(100vh-130px)]">
+            <main class="w-full h-[calc(100vh-82px)] sm:h-[calc(100vh-130px)]">
                 <slot />
             </main>
         </div>

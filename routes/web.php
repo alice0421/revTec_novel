@@ -26,14 +26,6 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-// Route::get('/test', function(){
-//     return Redis::incr('visit');
-// });
-
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth', 'verified')->group(function () {
 // 小説一覧
 Route::get('/novels', [NovelController::class, 'index'])
@@ -48,12 +40,20 @@ Route::post('/novels/edit', [NovelController::class, 'store'])
 ->name('novelStore');
 
 // 既存小説編集
-Route::get('/novels/edit', [NovelController::class, 'edit'])
+Route::get('/novels/{novel}/edit', [NovelController::class, 'edit'])
 ->name('novelEdit');
 
 // 既存小説保存
-Route::post('/novels/update', [NovelController::class, 'update'])
+Route::post('/novels/{novel}/update', [NovelController::class, 'update'])
 ->name('novelUpdate');
 });
 
 require __DIR__.'/auth.php'; /* auth関係のルーティングを呼び出し(基本はweb.php) */
+
+// Route::get('/test', function(){
+//     return Redis::incr('visit');
+// });
+
+// Route::get('/dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');

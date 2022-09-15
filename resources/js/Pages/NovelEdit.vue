@@ -1,9 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
-import { Head, useForm, usePage } from "@inertiajs/inertia-vue3";
+import { Head, useForm } from "@inertiajs/inertia-vue3";
 import { ref, computed } from "vue";
-
-const user = usePage().props.value.auth.user.id; // user_idを取得
 
 const props = defineProps({
     id: Number,
@@ -14,7 +12,6 @@ const props = defineProps({
 });
 
 const form = useForm({
-    id: props.id,
     title: props.title,
     body: props.body,
     user_id: props.user_id,
@@ -24,7 +21,7 @@ const form = useForm({
 // 保存機能
 const submit = (e) => {
     e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
-    form.post(route("novelUpdate"), {});
+    form.post(route("novelUpdate", props.id), {});
 };
 
 // 記号挿入機能
@@ -60,12 +57,19 @@ const showPreview = computed(() => {
             <form @submit.prevent="submit" class="h-full">
                 <menu class="h-full grid grid-cols-7 grid-rows-1 gap-2">
                     <div class="col-start-1 col-end-3">
-                        <input
-                            type="text"
-                            @keydown.ctrl.s="submit"
-                            v-model="form.title"
-                            class="w-full h-full text-left font-semibold text-base sm:text-xl text-gray-800 border-solid border-2 border-zinc-400 py-3 px-1"
-                        />
+                        <label for="titleEdit" class="w-full">
+                            <button
+                                id="titleEdit"
+                                type="button"
+                                class="truncate w-full h-full px-1 text-left font-semibold text-sm sm:text-xl text-blue-500 hover:underline"
+                            >
+                                <img
+                                    :src="'/images/icon_edit.png'"
+                                    alt="タイトル編集"
+                                    class="inline object-contain h-full"
+                                />{{ form.title }}
+                            </button>
+                        </label>
                     </div>
                     <div
                         class="col-start-3 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"

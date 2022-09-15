@@ -7,3 +7,8 @@ span.dot {
     -webkit-text-emphasis: filled circle black;
     text-emphasis: filled circle black;
 }
+
+/*小説一覧でのスクロールバーを無くす*/
+.showNovels::-webkit-scrollbar {
+    display: none;
+}

@@ -6,8 +6,8 @@ import { ref, computed } from "vue";
 const user = usePage().props.value.auth.user.id; // user_idを取得
 
 const form = useForm({
-    title: "吾輩は猫である",
-    body: "｜＃「吾輩は猫である」冒頭＃\n\n｜吾輩《わがはい》は｜【猫】である。名前はまだ無い。どこで生れたか｜頓《とん》と見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番｜獰悪《どうあく》な種族であったそうだ。この書生というのは時々我々を｜捕《つかま》えて煮て食うという話である。しかしその当時は何という｜考《かんがえ》もなかったから別段恐しいとも思わなかった。ただ彼の｜掌《てのひら》に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。掌の上で少し落ち付いて書生の顔を見たのがいわゆる人間というものの見始であろう。この時妙なものだと思った感じが今でも残っている。第一毛を以て装飾されべきはずの顔がつるつるしてまるで｜薬缶《やかん》だ。その後猫にも大分｜逢《あ》ったがこんな片輪には一度も｜出会《でく》わした事がない。のみならず顔の真中が余りに突起している。そうしてその穴の中から時々ぷうぷうと｜烟《けむり》を吹く。どうも｜咽《む》せぽくて実に弱った。これが人間の飲む｜烟草《タバコ》というものである事は｜漸《ようや》くこの｜頃《ごろ》知った。",
+    title: "新規小説タイトル",
+    body: "",
     user_id: user,
     output_setting_template_id: 1,
 });
@@ -51,15 +51,23 @@ const showPreview = computed(() => {
             <form @submit.prevent="submit" class="h-full">
                 <menu class="h-full grid grid-cols-7 grid-rows-1 gap-2">
                     <div class="col-start-1 col-end-3">
-                        <input
-                            type="text"
-                            @keydown.ctrl.s="submit"
-                            v-model="form.title"
-                            class="w-full h-full text-left font-semibold text-base sm:text-xl text-gray-800 border-solid border-2 border-zinc-400 py-3 px-1"
-                        />
+                        <label for="titleEdit" class="w-full">
+                            <button
+                                id="titleEdit"
+                                type="button"
+                                class="truncate w-full h-full px-1 text-left font-semibold text-sm sm:text-xl text-blue-500 hover:underline"
+                            >
+                                <img
+                                    :src="'/images/icon_edit.png'"
+                                    alt="タイトル編集"
+                                    class="inline object-contain h-full"
+                                />{{ form.title }}
+                            </button>
+                        </label>
                     </div>
+
                     <div
-                        class="col-start-3 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
+                        class="col-start-3 text-center grid grid-cols-2 grid-rows-1 gap-2"
                     >
                         <button
                             type="button"
@@ -70,7 +78,7 @@ const showPreview = computed(() => {
                         </button>
                     </div>
                     <div
-                        class="col-start-4 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
+                        class="col-start-4 text-center grid grid-cols-2 grid-rows-1 gap-2"
                     >
                         <button
                             type="button"
@@ -88,7 +96,7 @@ const showPreview = computed(() => {
                         </button>
                     </div>
                     <div
-                        class="col-start-5 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
+                        class="col-start-5 text-center grid grid-cols-2 grid-rows-1 gap-2"
                     >
                         <button
                             type="button"
@@ -106,7 +114,7 @@ const showPreview = computed(() => {
                         </button>
                     </div>
                     <div
-                        class="col-start-6 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
+                        class="col-start-6 text-center grid grid-cols-2 grid-rows-1 gap-2"
                     >
                         <button
                             type="button"
@@ -124,7 +132,7 @@ const showPreview = computed(() => {
                         </button>
                     </div>
                     <div
-                        class="col-start-7 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
+                        class="col-start-7 text-center grid grid-cols-2 grid-rows-1 gap-2"
                     >
                         <button
                             type="submit"
@@ -170,6 +178,7 @@ const showPreview = computed(() => {
                         <textarea
                             @keydown.ctrl.s="submit"
                             v-model="form.body"
+                            placeholder="本文"
                             class="resize-none w-full h-full border-none"
                         ></textarea>
                     </div>
