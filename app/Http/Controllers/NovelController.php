@@ -30,8 +30,8 @@ class NovelController extends Controller
         $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
-            'user_id' => 'required',
-            'output_setting_template_id' => 'required'
+            'user_id' => 'required|integer',
+            'output_setting_template_id' => 'required|integer'
         ]);
 
         $newNovel = $novel->create([
