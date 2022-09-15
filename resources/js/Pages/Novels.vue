@@ -25,6 +25,19 @@ function showPreview(txt) {
 }
 </script>
 
+<style>
+/*小説一覧でのスクロールバーを無くす*/
+.showNovels::-webkit-scrollbar {
+    display: none;
+}
+
+/* 傍点 */
+span.dot {
+    -webkit-text-emphasis: filled circle black;
+    text-emphasis: filled circle black;
+}
+</style>
+
 <template>
     <Head title="Novels" />
 
@@ -34,11 +47,12 @@ function showPreview(txt) {
                 小説一覧
             </h2>
         </template>
+
         <div class="bg-white py-2 px-2 w-full h-full sm:px-4 lg:px-6">
             <div class="showNovels w-full flex overflow-x-scroll">
                 <div v-for="novel in novels" :key="novel.id" class="m-2">
                     <div
-                        class="p-6 w-64 bg-white rounded-lg border border-gray-200 shadow-md"
+                        class="relative p-6 w-48 h-44 sm:w-64 sm:h-60 bg-white rounded-lg border border-gray-200 shadow-md"
                     >
                         <h5
                             class="truncate mb-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900"
@@ -56,7 +70,7 @@ function showPreview(txt) {
                         ></p>
                         <a
                             :href="route('novelEdit', novel.id)"
-                            class="inline-flex truncate items-center py-2 px-3 text-white bg-blue-500 hover:bg-blue-700 focus:bg-blue-900 font-medium rounded-lg text-sm"
+                            class="absolute bottom-6 left-6 inline-flex truncate items-center py-1 sm:py-2 px-3 text-white bg-blue-500 hover:bg-blue-700 focus:bg-blue-900 font-medium rounded-lg text-xs sm:text-sm"
                         >
                             Edit
                             <svg

@@ -49,7 +49,7 @@ const showingNavigationDropdown = ref(false);
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <div
                                 v-show="route().current('novelEdit')"
-                                class="inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out"
+                                class="inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900"
                             >
                                 小説執筆中
                             </div>
@@ -91,6 +91,13 @@ const showingNavigationDropdown = ref(false);
                                     </template>
                                 </BreezeDropdown>
                             </div>
+                        </div>
+
+                        <div
+                            v-show="route().current('novelEdit')"
+                            class="sm:hidden inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900"
+                        >
+                            小説執筆中
                         </div>
 
                         <!-- Hamburger -->
@@ -135,7 +142,6 @@ const showingNavigationDropdown = ref(false);
                         </div>
                     </div>
                 </div>
-
                 <!-- Responsive Navigation Menu -->
                 <div
                     :class="{

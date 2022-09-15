@@ -43,6 +43,14 @@ const showPreview = computed(() => {
 });
 </script>
 
+<style>
+/* 傍点 */
+span.dot {
+    -webkit-text-emphasis: filled circle black;
+    text-emphasis: filled circle black;
+}
+</style>
+
 <!-- BreezeAuthenticatedLayout内にログアウトのsubmitがあるため、form分割 -->
 <template>
     <Head title="NovelCreate" />
