@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Novel;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Providers\RouteServiceProvider;
@@ -13,7 +14,7 @@ class NovelController extends Controller
     public function index(Novel $novel)
     {
         return Inertia::render('Novels', [
-            'novels' => $novel->get()
+            'novels' => $novel->where('user_id', Auth::id())->get()
         ]);
     }
 
@@ -59,11 +60,11 @@ class NovelController extends Controller
     public function update(Novel $novel, Request $request)
     {
         $request->validate([
-            'id' => 'required',
+            'id' => 'required|integer',
             'title' => 'required|string',
             'body' => 'required|string',
-            'user_id' => 'required',
-            'output_setting_template_id' => 'required'
+            'user_id' => 'required|integer',
+            'output_setting_template_id' => 'required|integer'
         ]);
 
         $novel->where('id', $request->id)->update([

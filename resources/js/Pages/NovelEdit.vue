@@ -6,14 +6,12 @@ import { ref, computed } from "vue";
 const user = usePage().props.value.auth.user.id; // user_idを取得
 
 const props = defineProps({
-    id: String,
+    id: Number,
     title: String,
     body: String,
     user_id: Number,
     output_setting_template_id: Number,
 });
-
-console.log(props.id);
 
 const form = useForm({
     id: props.id,

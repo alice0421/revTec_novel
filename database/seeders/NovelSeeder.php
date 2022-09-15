@@ -24,7 +24,7 @@ class NovelSeeder extends Seeder
         Novel::create([
             'title' => 'Title02',
             'body' => 'Body02',
-            'user_id' => 1,
+            'user_id' => 2,
             'output_setting_template_id' => 1,
         ]);
         Novel::create([
@@ -36,7 +36,7 @@ class NovelSeeder extends Seeder
         Novel::create([
             'title' => 'Title04',
             'body' => 'Body04',
-            'user_id' => 1,
+            'user_id' => 2,
             'output_setting_template_id' => 1,
         ]);
         Novel::create([
