@@ -1,7 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
-import { ref } from "vue";
+import { ref, ouMounted, onMounted } from "vue";
 
 const props = defineProps({
     novels: Array,
@@ -9,7 +9,8 @@ const props = defineProps({
 
 const swipe = ref(0); // カルーセル用のtailwind css
 const carouselWidth = ref(0); // 現在のカルーセルの幅
-let carouselPos = 0; // カルーセル位置（0: 一番左の時）
+const rest = ref(0);
+const novelLength = 240 * props.novels.length; // 小説一覧の長さ（240はカード1枚当たりの幅(margin含む)）
 
 function showPreview(txt) {
     let txtTmp = txt;
@@ -29,40 +30,57 @@ function showPreview(txt) {
     return txtTmp;
 }
 
-const carousel = (dir) => {
-    // カルーセルの幅を計算
+// カルーセルの幅をid="carousel"の要素幅に合わせて計算
+const resizeObserver = new ResizeObserver((entries) => {
     const carouselId = document.getElementById("carousel");
-    carouselWidth.value = carouselId.clientWidth - 80; // px-10(40px)*2を引く
+    carouselWidth.value = carouselId.clientWidth - 80; // 要素幅からpx-10(40px)*2を引く
 
-    const canMoveMaxTime = Math.trunc(
-        (240 * props.novels.length) / carouselWidth.value
-    ); // 240はカード1枚当たりの幅(margin含む)
-    const rest = (240 * props.novels.length) % carouselWidth.value;
-    console.log((rest / carouselWidth.value) * 100);
+    if (carouselWidth.value < novelLength - swipe.value) {
+        // 画面幅大で一番最後の小説が見えている⇒画面幅小の時に最後の小説が画面幅の右端に来るように調整
+        rest.value = (novelLength - swipe.value) % carouselWidth.value;
+    } else {
+        rest.value = novelLength % carouselWidth.value; // 最後の小説の位置に合わせる
+    }
 
-    // カルーセルの挙動制御
-    if (carouselPos <= 0) {
+    // 画面幅小で一番最後の小説が見えている⇒画面幅大の時に最後の小説が画面幅の右端に来るように調整
+    if (novelLength - swipe.value < carouselWidth.value) {
+        swipe.value = novelLength - carouselWidth.value;
+    }
+});
+onMounted(() => {
+    // id="carousel"が生まれるのを待ってから実行
+    // id="carousel"の要素幅を監視
+    resizeObserver.observe(document.querySelector("#carousel"));
+});
+
+// ボタン押下時のカルーセルの挙動制御
+const carouselButton = (dir) => {
+    if (swipe.value < carouselWidth.value) {
         if (dir == "right") {
-            swipe.value = swipe.value + 100;
-            carouselPos++;
+            swipe.value = swipe.value + carouselWidth.value;
+        } else {
+            // 最後の余りを強制的に最初の小説に持ってくる
+            swipe.value = 0;
         }
-    } else if (0 < carouselPos && carouselPos < canMoveMaxTime) {
-        if (dir == "right" && carouselPos == canMoveMaxTime - 1) {
-            swipe.value = swipe.value + (rest / carouselWidth.value) * 100;
-            carouselPos++;
+    } else if (
+        carouselWidth.value <= swipe.value &&
+        swipe.value < novelLength - carouselWidth.value
+    ) {
+        if (
+            dir == "right" &&
+            swipe.value == novelLength - carouselWidth.value - rest.value
+        ) {
+            swipe.value = swipe.value + rest.value;
         } else {
             if (dir == "right") {
-                swipe.value = swipe.value + 100;
-                carouselPos++;
+                swipe.value = swipe.value + carouselWidth.value;
             } else {
-                swipe.value = swipe.value - 100;
-                carouselPos--;
+                swipe.value = swipe.value - carouselWidth.value;
             }
         }
     } else {
         if (dir == "left") {
-            swipe.value = swipe.value - (rest / carouselWidth.value) * 100;
-            carouselPos--;
+            swipe.value = swipe.value - carouselWidth.value;
         }
     }
 };
@@ -94,7 +112,7 @@ span.dot {
             >
                 <button
                     type="button"
-                    @click="carousel('left')"
+                    @click="carouselButton('left')"
                     class="absolute left-2 bottom-24 z-10 w-10 h-10 border-2 rounded-full bg-gray-50 hover:bg-gray-100 active:bg-gray-200"
                 >
                     <img
@@ -105,11 +123,12 @@ span.dot {
                 </button>
                 {{ swipe }}
                 {{ carouselPos }}
-                {{ novels.length }}
+                {{ 240 * novels.length }}
                 {{ carouselWidth }}
+                {{ rest }}
                 <div
                     class="flex"
-                    :style="`transform: translateX(-${swipe}%); transition: all 500ms 0s ease-in-out;`"
+                    :style="`transform: translateX(-${swipe}px); transition: all 500ms 0s ease-in-out;`"
                 >
                     <div v-for="novel in novels" :key="novel.id" class="m-2">
                         <div
@@ -153,7 +172,7 @@ span.dot {
                 </div>
                 <button
                     type="button"
-                    @click="carousel('right')"
+                    @click="carouselButton('right')"
                     class="absolute right-2 bottom-24 z-10 w-10 h-10 border-2 rounded-full bg-gray-50 hover:bg-gray-100 active:bg-gray-200"
                 >
                     <img
