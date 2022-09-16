@@ -94,7 +94,10 @@ span.dot {
                 </button>
                 {{ swipe }}
                 {{ carouselPos }}
-                <div :class="'showNovels flex -translate-x-[' + swipe + '%]'">
+                <div
+                    class="showNovels flex"
+                    :style="`transform: translateX(-${swipe}%)`"
+                >
                     <div v-for="novel in novels" :key="novel.id" class="m-2">
                         <div
                             class="relative p-6 w-56 h-52 bg-white rounded-lg border border-gray-200 shadow-md"
