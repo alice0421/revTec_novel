@@ -14,7 +14,11 @@ class NovelController extends Controller
     public function index(Novel $novel)
     {
         return Inertia::render('Novels', [
-            'novels' => $novel->where('user_id', Auth::id())->get()
+            'novels' => $novel
+            ->where('user_id', Auth::id())
+            ->orderByDesc('updated_at')
+            ->limit(20)
+            ->get()
         ]);
     }
 

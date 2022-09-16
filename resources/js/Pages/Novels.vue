@@ -3,11 +3,12 @@ import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref } from "vue";
 
-defineProps({
+const props = defineProps({
     novels: Array,
 });
 
 const swipe = ref(0); // カルーセル用のtailwind css
+const carouselWidth = ref(0); // 現在のカルーセルの幅
 let carouselPos = 0; // カルーセル位置（0: 一番左の時）
 
 function showPreview(txt) {
@@ -28,25 +29,39 @@ function showPreview(txt) {
     return txtTmp;
 }
 
-// 幅100％から引いている。
-// ボタンの推した回数で制限⇒実際の長さ/現在の幅で回数が分かるはず！
 const carousel = (dir) => {
+    // カルーセルの幅を計算
+    const carouselId = document.getElementById("carousel");
+    carouselWidth.value = carouselId.clientWidth - 80; // px-10(40px)*2を引く
+
+    const canMoveMaxTime = Math.trunc(
+        (240 * props.novels.length) / carouselWidth.value
+    ); // 240はカード1枚当たりの幅(margin含む)
+    const rest = (240 * props.novels.length) % carouselWidth.value;
+    console.log((rest / carouselWidth.value) * 100);
+
+    // カルーセルの挙動制御
     if (carouselPos <= 0) {
         if (dir == "right") {
             swipe.value = swipe.value + 100;
             carouselPos++;
         }
-    } else if (0 < carouselPos && carouselPos < 5) {
-        if (dir == "right") {
-            swipe.value = swipe.value + 100;
+    } else if (0 < carouselPos && carouselPos < canMoveMaxTime) {
+        if (dir == "right" && carouselPos == canMoveMaxTime - 1) {
+            swipe.value = swipe.value + (rest / carouselWidth.value) * 100;
             carouselPos++;
         } else {
-            swipe.value = swipe.value - 100;
-            carouselPos--;
+            if (dir == "right") {
+                swipe.value = swipe.value + 100;
+                carouselPos++;
+            } else {
+                swipe.value = swipe.value - 100;
+                carouselPos--;
+            }
         }
     } else {
         if (dir == "left") {
-            swipe.value = swipe.value - 100;
+            swipe.value = swipe.value - (rest / carouselWidth.value) * 100;
             carouselPos--;
         }
     }
@@ -54,11 +69,6 @@ const carousel = (dir) => {
 </script>
 
 <style>
-/*小説一覧でのスクロールバーを無くす*/
-.showNovels::-webkit-scrollbar {
-    display: none;
-}
-
 /* 傍点 */
 span.dot {
     -webkit-text-emphasis: filled circle black;
@@ -79,6 +89,7 @@ span.dot {
         <div class="bg-white py-2 px-4 w-full h-full sm:px-16">
             <!-- 一番上の小説一覧 -->
             <div
+                id="carousel"
                 class="relative max-w-[90rem] overflow-x-hidden lg:mx-auto px-10"
             >
                 <button
@@ -94,9 +105,11 @@ span.dot {
                 </button>
                 {{ swipe }}
                 {{ carouselPos }}
+                {{ novels.length }}
+                {{ carouselWidth }}
                 <div
-                    class="showNovels flex"
-                    :style="`transform: translateX(-${swipe}%)`"
+                    class="flex"
+                    :style="`transform: translateX(-${swipe}%); transition: all 500ms 0s ease-in-out;`"
                 >
                     <div v-for="novel in novels" :key="novel.id" class="m-2">
                         <div
