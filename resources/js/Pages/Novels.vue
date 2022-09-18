@@ -106,6 +106,9 @@ span.dot {
 
         <div class="bg-white py-2 px-4 w-full h-full sm:px-16">
             <!-- 一番上の小説一覧 -->
+            <h2 class="text-lg sm:text-xl font-bold text-gray-800">
+                最近編集した小説
+            </h2>
             <div
                 id="carousel"
                 class="relative max-w-[90rem] overflow-x-hidden lg:mx-auto px-10"
@@ -113,7 +116,7 @@ span.dot {
                 <button
                     type="button"
                     @click="carouselButton('left')"
-                    class="absolute left-2 bottom-24 z-10 w-10 h-10 border-2 rounded-full bg-gray-50 hover:bg-gray-100 active:bg-gray-200"
+                    class="absolute left-2 bottom-24 z-10 w-10 h-10 border-2 rounded-full bg-gray-50 active:bg-gray-200 opacity-30 hover:opacity-80"
                 >
                     <img
                         :src="'/images/icon_left.png'"
@@ -121,11 +124,6 @@ span.dot {
                         class="object-contain h-full w-full"
                     />
                 </button>
-                {{ swipe }}
-                {{ carouselPos }}
-                {{ 240 * novels.length }}
-                {{ carouselWidth }}
-                {{ rest }}
                 <div
                     class="flex"
                     :style="`transform: translateX(-${swipe}px); transition: all 500ms 0s ease-in-out;`"
@@ -173,7 +171,7 @@ span.dot {
                 <button
                     type="button"
                     @click="carouselButton('right')"
-                    class="absolute right-2 bottom-24 z-10 w-10 h-10 border-2 rounded-full bg-gray-50 hover:bg-gray-100 active:bg-gray-200"
+                    class="absolute right-2 bottom-24 z-10 w-10 h-10 border-2 rounded-full bg-gray-50 active:bg-gray-200 opacity-30 hover:opacity-80"
                 >
                     <img
                         :src="'/images/icon_right.png'"

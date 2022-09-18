@@ -17,7 +17,7 @@ class NovelController extends Controller
             'novels' => $novel
             ->where('user_id', Auth::id())
             ->orderByDesc('updated_at')
-            ->limit(20)
+            ->limit(10)
             ->get()
         ]);
     }
