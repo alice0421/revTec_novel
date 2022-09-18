@@ -35,12 +35,8 @@ const resizeObserver = new ResizeObserver((entries) => {
     const carouselId = document.getElementById("carousel");
     carouselWidth.value = carouselId.clientWidth - 80; // 要素幅からpx-10(40px)*2を引く
 
-    if (carouselWidth.value < novelLength - swipe.value) {
-        // 画面幅大で一番最後の小説が見えている⇒画面幅小の時に最後の小説が画面幅の右端に来るように調整
-        rest.value = (novelLength - swipe.value) % carouselWidth.value;
-    } else {
-        rest.value = novelLength % carouselWidth.value; // 最後の小説の位置に合わせる
-    }
+    // 画面幅（carouselWidth）変更によるrestの再計算
+    rest.value = novelLength - carouselWidth.value - swipe.value;
 
     // 画面幅小で一番最後の小説が見えている⇒画面幅大の時に最後の小説が画面幅の右端に来るように調整
     if (novelLength - swipe.value < carouselWidth.value) {
@@ -55,9 +51,16 @@ onMounted(() => {
 
 // ボタン押下時のカルーセルの挙動制御
 const carouselButton = (dir) => {
+    // swipe変更によるrestの再計算
+    rest.value = novelLength - carouselWidth.value - swipe.value;
+
     if (swipe.value < carouselWidth.value) {
         if (dir == "right") {
-            swipe.value = swipe.value + carouselWidth.value;
+            if (rest.value < carouselWidth.value) {
+                swipe.value = swipe.value + rest.value;
+            } else {
+                swipe.value = swipe.value + carouselWidth.value;
+            }
         } else {
             // 最後の余りを強制的に最初の小説に持ってくる
             swipe.value = 0;
@@ -66,10 +69,7 @@ const carouselButton = (dir) => {
         carouselWidth.value <= swipe.value &&
         swipe.value < novelLength - carouselWidth.value
     ) {
-        if (
-            dir == "right" &&
-            swipe.value == novelLength - carouselWidth.value - rest.value
-        ) {
+        if (dir == "right" && rest.value < carouselWidth.value) {
             swipe.value = swipe.value + rest.value;
         } else {
             if (dir == "right") {
@@ -106,6 +106,9 @@ span.dot {
 
         <div class="bg-white py-2 px-4 w-full h-full sm:px-16">
             <!-- 一番上の小説一覧 -->
+            swipe: {{ swipe }}, carouselWidth: {{ carouselWidth }}, novelLength:
+            {{ 240 * novels.length }}, rest:
+            {{ 240 * novels.length - carouselWidth - swipe }}
             <h2 class="text-lg sm:text-xl font-bold text-gray-800">
                 最近編集した小説
             </h2>
@@ -129,11 +132,11 @@ span.dot {
                     :style="`transform: translateX(-${swipe}px); transition: all 500ms 0s ease-in-out;`"
                 >
                     <div v-for="novel in novels" :key="novel.id" class="m-2">
-                        <div
+                        <article
                             class="relative p-6 w-56 h-52 bg-white rounded-lg border border-gray-200 shadow-md"
                         >
                             <h5
-                                class="truncate mb-2 text-2xl font-bold text-black"
+                                class="truncate mb-2 text-2xl font-bold text-gray-800"
                             >
                                 {{ novel.title }}
                             </h5>
@@ -165,7 +168,7 @@ span.dot {
                                     ></path>
                                 </svg>
                             </a>
-                        </div>
+                        </article>
                     </div>
                 </div>
                 <button
