@@ -1,17 +1,19 @@
 <script setup>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
-import { ref, ouMounted, onMounted } from "vue";
+import { ref, onMounted } from "vue";
+import NovelDetailsModal from "@/Pages/NovelDetailsModal.vue";
 
 const props = defineProps({
     novels: Array,
 });
 
-const swipe = ref(0); // カルーセル用のtailwind css
-const carouselWidth = ref(0); // 現在のカルーセルの幅
-const rest = ref(0);
-const novelLength = 240 * props.novels.length; // 小説一覧の長さ（240はカード1枚当たりの幅(margin含む)）
+const swipe = ref(0); // カルーセルで動いた小説の長さ
+const carouselWidth = ref(0); // 現在見えているカルーセルの幅
+const rest = ref(0); // 残りの小説の長さ
+const novelLength = 240 * props.novels.length; // 小説全体の長さ（240はカード1枚当たりの幅（margin含む））
 
+// プレビュー機能（アウトライン・ルビ・傍点の変換（正規表現））
 function showPreview(txt) {
     let txtTmp = txt;
     txtTmp = txtTmp
@@ -30,12 +32,13 @@ function showPreview(txt) {
     return txtTmp;
 }
 
-// カルーセルの幅をid="carousel"の要素幅に合わせて計算
+// 画面幅変更時のカルーセルの挙動制御
+// カルーセル幅（carouselWidth）をid="carousel"の要素幅に合わせて再計算
 const resizeObserver = new ResizeObserver((entries) => {
     const carouselId = document.getElementById("carousel");
     carouselWidth.value = carouselId.clientWidth - 80; // 要素幅からpx-10(40px)*2を引く
 
-    // 画面幅（carouselWidth）変更によるrestの再計算
+    // カルーセル幅（carouselWidth）変更によるrestの再計算
     rest.value = novelLength - carouselWidth.value - swipe.value;
 
     // 画面幅小で一番最後の小説が見えている⇒画面幅大の時に最後の小説が画面幅の右端に来るように調整
@@ -105,10 +108,19 @@ span.dot {
         </template>
 
         <div class="bg-white py-2 px-4 w-full h-full sm:px-16">
-            <!-- 一番上の小説一覧 -->
+            <!-- ここはテストの場所 -->
             swipe: {{ swipe }}, carouselWidth: {{ carouselWidth }}, novelLength:
             {{ 240 * novels.length }}, rest:
             {{ 240 * novels.length - carouselWidth - swipe }}
+            <div>
+                <button class="bg-gray-200">モーダル切替</button>
+                <div>
+                    showNovelDetails: {{ showNovelDetails }}
+                    <NovelDetailsModal></NovelDetailsModal>
+                    <p v-show="showNovelDetails">！モーダル表示！</p>
+                </div>
+            </div>
+            <!-- 最近編集した小説（一番上の小説一覧） -->
             <h2 class="text-lg sm:text-xl font-bold text-gray-800">
                 最近編集した小説
             </h2>
