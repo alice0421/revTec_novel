@@ -1,37 +1,39 @@
 <script setup>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
-import { Head } from "@inertiajs/inertia-vue3";
-import { ref, onMounted } from "vue";
-import NovelDetailsModal from "@/Pages/NovelDetailsModal.vue";
+import { Head, useForm } from "@inertiajs/inertia-vue3";
+import NovelDetailsModal from "@/Components/NovelDetailsModal.vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
 const props = defineProps({
     novels: Array,
+    user: String,
 });
+
+// プレビュー機能（アウトライン・ルビ・傍点の変換（正規表現））
+function showPreview(txt) {
+    let txtTmp = txt;
+    if (txtTmp) {
+        txtTmp = txtTmp
+            .replace(
+                /[\|｜][＃|#]([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+?)[＃|#]/g,
+                "<span class='font-bold text-xl'>$1</span>"
+            )
+            .replace(
+                /[\|｜]([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+)《([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+?)》/g,
+                "<ruby>$1<rt>$2</rt></ruby>"
+            )
+            .replace(
+                /[\|｜]【([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+?)】/g,
+                "<span class='dot'>$1</span>"
+            );
+    }
+    return txtTmp;
+}
 
 const swipe = ref(0); // カルーセルで動いた小説の長さ
 const carouselWidth = ref(0); // 現在見えているカルーセルの幅
 const rest = ref(0); // 残りの小説の長さ
 const novelLength = 240 * props.novels.length; // 小説全体の長さ（240はカード1枚当たりの幅（margin含む））
-
-// プレビュー機能（アウトライン・ルビ・傍点の変換（正規表現））
-function showPreview(txt) {
-    let txtTmp = txt;
-    txtTmp = txtTmp
-        .replace(
-            /[\|｜][＃|#]([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+?)[＃|#]/g,
-            "<span class='font-bold text-xl'>$1</span>"
-        )
-        .replace(
-            /[\|｜]([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+)《([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+?)》/g,
-            "<ruby>$1<rt>$2</rt></ruby>"
-        )
-        .replace(
-            /[\|｜]【([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+?)】/g,
-            "<span class='dot'>$1</span>"
-        );
-    return txtTmp;
-}
-
 // 画面幅変更時のカルーセルの挙動制御
 // カルーセル幅（carouselWidth）をid="carousel"の要素幅に合わせて再計算
 const resizeObserver = new ResizeObserver((entries) => {
@@ -51,7 +53,9 @@ onMounted(() => {
     // id="carousel"の要素幅を監視
     resizeObserver.observe(document.querySelector("#carousel"));
 });
-
+onUnmounted(() => {
+    resizeObserver.disconnect();
+});
 // ボタン押下時のカルーセルの挙動制御
 const carouselButton = (dir) => {
     // swipe変更によるrestの再計算
@@ -87,6 +91,17 @@ const carouselButton = (dir) => {
         }
     }
 };
+
+// 小説詳細のモーダル表示制御
+const showNovelDetails = ref(false);
+const presentShowNovel = ref("");
+const openNovelDetails = (novel) => {
+    showNovelDetails.value = true;
+    presentShowNovel.value = novel;
+};
+const closeNovelDetails = () => {
+    showNovelDetails.value = false;
+};
 </script>
 
 <style>
@@ -112,14 +127,6 @@ span.dot {
             swipe: {{ swipe }}, carouselWidth: {{ carouselWidth }}, novelLength:
             {{ 240 * novels.length }}, rest:
             {{ 240 * novels.length - carouselWidth - swipe }}
-            <div>
-                <button class="bg-gray-200">モーダル切替</button>
-                <div>
-                    showNovelDetails: {{ showNovelDetails }}
-                    <NovelDetailsModal></NovelDetailsModal>
-                    <p v-show="showNovelDetails">！モーダル表示！</p>
-                </div>
-            </div>
             <!-- 最近編集した小説（一番上の小説一覧） -->
             <h2 class="text-lg sm:text-xl font-bold text-gray-800">
                 最近編集した小説
@@ -147,11 +154,11 @@ span.dot {
                         <article
                             class="relative p-6 w-56 h-52 bg-white rounded-lg border border-gray-200 shadow-md"
                         >
-                            <h5
+                            <div
                                 class="truncate mb-2 text-2xl font-bold text-gray-800"
                             >
                                 {{ novel.title }}
-                            </h5>
+                            </div>
                             <p
                                 v-html="showPreview(novel.body)"
                                 class="truncate whitespace-pre-line break-all mb-3 text-sm sm:text-normal font-normal text-gray-400"
@@ -161,8 +168,9 @@ span.dot {
                                     -webkit-line-clamp: 3;
                                 "
                             ></p>
-                            <a
-                                :href="route('novelEdit', novel.id)"
+                            <button
+                                type="button"
+                                @click="openNovelDetails(novel)"
                                 class="absolute bottom-6 left-6 inline-flex truncate items-center py-2 px-3 text-white bg-blue-500 hover:bg-blue-700 active:bg-blue-900 font-medium rounded-lg text-sm"
                             >
                                 詳細
@@ -179,7 +187,7 @@ span.dot {
                                         clip-rule="evenodd"
                                     ></path>
                                 </svg>
-                            </a>
+                            </button>
                         </article>
                     </div>
                 </div>
@@ -198,5 +206,107 @@ span.dot {
 
             <!-- 二番目以降は以下に書くこと -->
         </div>
+        <NovelDetailsModal
+            v-show="showNovelDetails"
+            @close="closeNovelDetails"
+            :presentShowNovel="presentShowNovel"
+            :user="user"
+            :showPreview="showPreview"
+        />
+
+        <!-- <NovelDetailsModal v-show="showNovelDetails" @close="closeNovelDetails">
+            <div
+                class="max-w-[90rem] lg:mx-auto sm:px-4 h-full grid grid-cols-3 grid-rows-1 gap-5"
+            >
+                <div class="w-full h-full col-start-1 col-end-3">
+                    <h5 class="text-xs sm:text-sm text-gray-400">シリーズ</h5>
+                    <div
+                        class="truncate mb-3 text-sm sm:text-base font-medium text-gray-800"
+                    >
+                        テストシリーズ
+                        {{ presentShowNovel.series_id }}
+                    </div>
+
+                    <h5 class="text-xs sm:text-sm text-gray-400">タイトル</h5>
+                    <input
+                        v-model="presentShowNovel.title"
+                        class="truncate mb-3 text-xl sm:text-2xl font-bold text-gray-800"
+                    />
+
+                    <h5 class="text-xs sm:text-sm text-gray-400">著者</h5>
+                    <div
+                        class="truncate mb-3 text-sm sm:text-base font-medium text-gray-800"
+                    >
+                        <span
+                            v-if="presentShowNovel.author"
+                            class="truncate text-gray-800"
+                            >{{ presentShowNovel.author }}（{{
+                                user.name
+                            }}）</span
+                        >
+                        <span
+                            v-else-if="user.author"
+                            class="truncate text-gray-800"
+                            >{{ user.author }}（{{ user.name }}）</span
+                        >
+                        <span v-else class="truncate text-gray-800">{{
+                            user.name
+                        }}</span>
+                    </div>
+
+                    <h5 class="text-xs sm:text-sm text-gray-400">本文</h5>
+                    <p
+                        v-html="showPreview(presentShowNovel.body)"
+                        class="truncate whitespace-pre-line break-all mb-3 text-sm sm:text-normal font-normal text-gray-800"
+                        style="
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 10;
+                        "
+                    ></p>
+
+                    <h5 class="absolute bottom-10 text-xs text-gray-400">
+                        {{ presentShowNovel.updated_at }}
+                    </h5>
+                </div>
+
+                <menu
+                    class="w-full h-full text-center text-xs sm:text-base col-start-3 col-end-4 grid grid-cols-1 grid-rows-5 gap-5"
+                >
+                    <div
+                        class="border-2 border-zinc-200 rounded-xl py-2 sm:py-5 row-start-1 row-end-5"
+                    >
+                        <a
+                            v-if="presentShowNovel.id"
+                            :href="route('novelEdit', presentShowNovel.id)"
+                            ><li
+                                class="py-2 my-2 w-3/5 mx-auto bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-lg text-gray-600 font-medium"
+                            >
+                                執筆画面へ
+                            </li></a
+                        >
+                        <li
+                            class="py-2 my-2 w-3/5 mx-auto bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-lg text-gray-600 font-medium"
+                        >
+                            複製
+                        </li>
+                        <li
+                            class="py-2 my-2 w-3/5 mx-auto bg-red-300 hover:bg-red-400 active:bg-red-500 rounded-lg text-white font-medium"
+                        >
+                            削除
+                        </li>
+                    </div>
+                    <div class="row-start-5 row-end-6">
+                        <select
+                            name="novel-state"
+                            class="text-xs sm:text-base border-2 border-zinc-200 rounded-xl"
+                        >
+                            <option value="continue">執筆中</option>
+                            <option value="finish">執筆完了</option>
+                        </select>
+                    </div>
+                </menu>
+            </div>
+        </NovelDetailsModal> -->
     </BreezeAuthenticatedLayout>
 </template>

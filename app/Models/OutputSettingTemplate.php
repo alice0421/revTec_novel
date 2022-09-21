@@ -12,6 +12,6 @@ class OutputSettingTemplate extends Model
     /* Relation */
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 }

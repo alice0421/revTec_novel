@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Novel;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,14 +12,16 @@ use App\Providers\RouteServiceProvider;
 class NovelController extends Controller
 {
     // 小説一覧画面の表示
-    public function index(Novel $novel)
+    public function index()
     {
+        $user = User::where("id", Auth::id())->first();
         return Inertia::render('Novels', [
-            'novels' => $novel
-            ->where('user_id', Auth::id())
-            ->orderByDesc('updated_at')
-            ->limit(10)
-            ->get()
+            'novels' => $user
+                ->novels()
+                ->latest('updated_at')
+                ->limit(10)
+                ->get(),
+            'user' =>  Auth::user(),
         ]);
     }
 
@@ -66,15 +69,14 @@ class NovelController extends Controller
         $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
-            'user_id' => 'required|integer',
-            'output_setting_template_id' => 'required|integer'
+            'output_setting_template_id' => 'required|integer',
         ]);
 
         $novel->where('id', $novel->id)->update([
             'title' => $request->title,
             'body' => $request->body,
-            'user_id' => $request->user_id,
             'output_setting_template_id' => $request->output_setting_template_id,
+            'author' => $request->author,
         ]);
     }
 }

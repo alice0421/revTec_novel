@@ -45,26 +45,26 @@ class User extends Authenticatable
     /* Relation */
     public function novels()   
     {
-        return $this->hasMany('App\Novel');  
+        return $this->hasMany(Novel::class);  
     }
     public function series()   
     {
-        return $this->hasMany('App\Series');  
+        return $this->hasMany(Series::class);  
     }
     public function output_setting_templates()   
     {
-        return $this->hasMany('App\OutputSettingTemplate');  
+        return $this->hasMany(OutputSettingTemplate::class);  
     }
     public function novel_setting_templates()   
     {
-        return $this->hasMany('App\NovelSettingTemplate');  
+        return $this->hasMany(NovelSettingTemplate::class);  
     }
     public function shortcuts()   
     {
-        return $this->hasMany('App\Shortcut');  
+        return $this->hasMany(Shortcut::class);  
     }
     public function function_buttons()   
     {
-        return $this->hasMany('App\FunctionButton');
+        return $this->hasMany(FunctionButton::class);
     }
 }

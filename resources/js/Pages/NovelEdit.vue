@@ -14,7 +14,6 @@ const props = defineProps({
 const form = useForm({
     title: props.title,
     body: props.body,
-    user_id: props.user_id,
     output_setting_template_id: props.output_setting_template_id,
 });
 
