@@ -6,7 +6,7 @@ import { ref, computed } from "vue";
 const user = usePage().props.value.auth.user.id; // user_idを取得
 
 const form = useForm({
-    title: "新規小説タイトル",
+    title: "",
     body: "",
     user_id: user,
     output_setting_template_id: 1,
@@ -71,6 +71,7 @@ span.dot {
                                 </h5>
                                 <input
                                     v-model="form.title"
+                                    placeholder="新規小説タイトル"
                                     id="titleEdit"
                                     class="xh-4/5 w-full mt-1 p-1 border-solid border-2 border-zinc-400 text-xs sm:text-base truncate"
                                 />
