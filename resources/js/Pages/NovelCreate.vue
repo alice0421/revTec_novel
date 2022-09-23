@@ -59,18 +59,22 @@ span.dot {
             <form @submit.prevent="submit" class="h-full">
                 <menu class="h-full grid grid-cols-7 grid-rows-1 gap-2">
                     <div class="col-start-1 col-end-3">
-                        <label for="titleEdit" class="w-full">
-                            <button
-                                id="titleEdit"
-                                type="button"
-                                class="truncate w-full h-full px-1 text-left font-semibold text-sm sm:text-xl text-blue-500 hover:underline"
-                            >
-                                <img
-                                    :src="'/images/icon_edit.png'"
-                                    alt="タイトル編集"
-                                    class="inline object-contain h-full"
-                                />{{ form.title }}
-                            </button>
+                        <label for="titleEdit" class="flex h-full w-full">
+                            <img
+                                :src="'/images/icon_edit.png'"
+                                alt="タイトル編集"
+                                class="inline object-contain h-full"
+                            />
+                            <div class="flex relative flex-col w-full">
+                                <h5 class="absolute top-[-8px] text-[10px]">
+                                    タイトル
+                                </h5>
+                                <input
+                                    v-model="form.title"
+                                    id="titleEdit"
+                                    class="xh-4/5 w-full mt-1 p-1 border-solid border-2 border-zinc-400 text-xs sm:text-base truncate"
+                                />
+                            </div>
                         </label>
                     </div>
 

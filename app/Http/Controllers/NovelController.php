@@ -41,12 +41,15 @@ class NovelController extends Controller
             'output_setting_template_id' => 'required|integer'
         ]);
 
-        $newNovel = $novel->create([
-            'title' => $request->title,
-            'body' => $request->body,
-            'user_id' => $request->user_id,
-            'output_setting_template_id' => $request->output_setting_template_id,
-        ]);
+        $form = $request->all();
+        $newNovel = $novel->create($form);
+
+        // $newNovel = $novel->create([
+        //     'title' => $request->title,
+        //     'body' => $request->body,
+        //     'user_id' => $request->user_id,
+        //     'output_setting_template_id' => $request->output_setting_template_id,
+        // ]);
 
         return redirect()->route('novelEdit', $newNovel->id);
     }
@@ -55,11 +58,13 @@ class NovelController extends Controller
     public function edit(Novel $novel)
     {
         return Inertia::render('NovelEdit', [
-            'id' => $novel->id,
-            'title' => $novel->title,
-            'body' => $novel->body,
-            'author' => $novel->author,
-            'output_setting_template_id' => $novel->output_setting_template_id,
+            'novel' => $novel->where("id", $novel->id)->first(), 
+            // 'id' => $novel->id,
+            // 'title' => $novel->title,
+            // 'body' => $novel->body,
+            // 'author' => $novel->author,
+            // 'output_setting_template_id' => $novel->output_setting_template_id,
+            'user' =>  Auth::user(),
         ]);
     }
 
@@ -71,12 +76,9 @@ class NovelController extends Controller
             'body' => 'required|string',
             'output_setting_template_id' => 'required|integer',
         ]);
+        // authorはNULLable
 
-        $novel->where('id', $novel->id)->update([
-            'title' => $request->title,
-            'body' => $request->body,
-            'author' => $request->author,
-            'output_setting_template_id' => $request->output_setting_template_id,
-        ]);
+        $form = $request->all();
+        $novel->fill($form)->save(); // 差分なしは変更しない
     }
 }

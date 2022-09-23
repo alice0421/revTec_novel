@@ -1,6 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
-import { Head, useForm } from "@inertiajs/inertia-vue3";
+import { Head } from "@inertiajs/inertia-vue3";
 import { ref } from "vue";
 import axios from "axios";
 
@@ -8,11 +8,9 @@ defineEmits(["close"]);
 const props = defineProps({
     presentShowNovel: Object,
     user: Object,
-    showPreview: Function,
 });
 
 const submit = (e) => {
-    console.log("submit!");
     e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
     axios
         .post(`/novels/${props.presentShowNovel.id}/update`, {
@@ -22,14 +20,31 @@ const submit = (e) => {
                 props.presentShowNovel.output_setting_template_id,
             author: props.presentShowNovel.author,
         })
-        .then(function (response) {
-            console.log("Complete!");
-            //console.log(response.data);
-        })
+        .then(function (response) {})
         .catch((error) => {
             console.log(error);
         });
 };
+
+function showPreview(txt) {
+    let txtTmp = txt;
+    if (txtTmp) {
+        txtTmp = txtTmp
+            .replace(
+                /[\|｜][＃|#]([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+?)[＃|#]/g,
+                "<span class='font-bold text-xl'>$1</span>"
+            )
+            .replace(
+                /[\|｜]([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+)《([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+?)》/g,
+                "<ruby>$1<rt>$2</rt></ruby>"
+            )
+            .replace(
+                /[\|｜]【([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+?)】/g,
+                "<span class='dot'>$1</span>"
+            );
+    }
+    return txtTmp;
+}
 </script>
 
 <style>
@@ -92,33 +107,22 @@ const submit = (e) => {
                         </h5>
                         <input
                             v-model="presentShowNovel.title"
-                            class="truncate mb-3 text-xl sm:text-2xl font-bold text-gray-800"
+                            @keydown.ctrl.s="submit"
+                            class="truncate mb-3 text-xl sm:text-2xl font-bold text-gray-800 border-solid border-2 border-zinc-400"
                         />
 
                         <h5 class="text-xs sm:text-sm text-gray-400">著者</h5>
                         <div
                             class="truncate mb-3 text-sm sm:text-base font-medium text-gray-800"
                         >
-                            <div class="truncate text-gray-800">
-                                （{{ user.name }}）<input
+                            <div class="text-gray-800">
+                                <input
+                                    @keydown.ctrl.s="submit"
                                     :placeholder="user.author"
                                     v-model="presentShowNovel.author"
-                                />
+                                    class="truncate border-solid border-2 border-zinc-400"
+                                />（{{ user.name }}）
                             </div>
-                            <!-- <div
-                                v-else-if="user.author"
-                                class="truncate text-gray-800"
-                            >
-                                （{{ user.name }}）<input
-                                    :placeholder="user.author"
-                                    v-model="presentShowNovel.author"
-                                />
-                            </div>
-                            <div v-else class="truncate text-gray-800">
-                                ({{ user.name }})<input
-                                    v-model="presentShowNovel.author"
-                                />
-                            </div> -->
                         </div>
 
                         <h5 class="text-xs sm:text-sm text-gray-400">本文</h5>

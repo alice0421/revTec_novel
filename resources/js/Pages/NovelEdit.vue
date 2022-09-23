@@ -1,27 +1,40 @@
 <script setup>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
-import { Head, useForm } from "@inertiajs/inertia-vue3";
+import { Head } from "@inertiajs/inertia-vue3";
+import NovelDetailsModal from "@/Components/NovelDetailsModal.vue";
 import { ref, computed } from "vue";
 
 const props = defineProps({
-    id: Number,
-    title: String,
-    body: String,
-    output_setting_template_id: Number,
-    author: String,
+    novel: Object,
+    // id: Number,
+    // title: String,
+    // body: String,
+    // output_setting_template_id: Number,
+    // author: String,
+    user: Object,
 });
 
-const form = useForm({
-    title: props.title,
-    body: props.body,
-    output_setting_template_id: props.output_setting_template_id,
-    author: props.author,
-});
+// const form = useForm({
+//     title: props.title,
+//     body: props.body,
+//     output_setting_template_id: props.output_setting_template_id,
+//     author: props.author,
+// });
 
 // 保存機能
 const submit = (e) => {
     e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
-    form.post(route("novelUpdate", props.id), {});
+    axios
+        .post(`/novels/${props.novel.id}/update`, {
+            title: props.novel.title,
+            body: props.novel.body,
+            output_setting_template_id: props.novel.output_setting_template_id,
+            author: props.novel.author,
+        })
+        .then(function (response) {})
+        .catch((error) => {
+            console.log(error);
+        });
 };
 
 // 記号挿入機能
@@ -31,7 +44,7 @@ function insertSymbol(symbol) {
 
 // プレビュー機能（アウトライン・ルビ・傍点の変換（正規表現））
 const showPreview = computed(() => {
-    let txt = form.body;
+    let txt = props.novel.body;
     txt = txt
         .replace(
             /[\|｜][＃|#]([　,.ー―-！？!?～~・、。"'”’％%＠@（）()｛｝{}「」：；:;/／￥0-9０-９A-zＡ-ｚ一-龠ぁ-んァ-ヶ]+?)[＃|#]/g,
@@ -47,6 +60,15 @@ const showPreview = computed(() => {
         );
     return txt;
 });
+
+// 小説詳細のモーダル表示制御
+const showNovelDetails = ref(false);
+const openNovelDetails = (novel) => {
+    showNovelDetails.value = true;
+};
+const closeNovelDetails = () => {
+    showNovelDetails.value = false;
+};
 </script>
 
 <style>
@@ -62,114 +84,113 @@ span.dot {
     <Head title="NovelEdit" />
     <BreezeAuthenticatedLayout>
         <template #header>
-            <form @submit.prevent="submit" class="h-full">
-                <menu class="h-full grid grid-cols-7 grid-rows-1 gap-2">
-                    <div class="col-start-1 col-end-3">
-                        <label for="titleEdit" class="w-full">
-                            <button
-                                id="titleEdit"
-                                type="button"
-                                class="truncate w-full h-full px-1 text-left font-semibold text-sm sm:text-xl text-blue-500 hover:underline"
-                            >
-                                <img
-                                    :src="'/images/icon_edit.png'"
-                                    alt="タイトル編集"
-                                    class="inline object-contain h-full"
-                                />{{ form.title }}
-                            </button>
-                        </label>
-                    </div>
-                    <div
-                        class="col-start-3 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
-                    >
+            <menu class="h-full grid grid-cols-7 grid-rows-1 gap-2">
+                <div class="col-start-1 col-end-3">
+                    <label for="titleEdit" class="w-full">
                         <button
+                            id="titleEdit"
                             type="button"
-                            @click="insertSymbol('｜＃＃')"
-                            class="col-start-2 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
-                        >
-                            見出し
-                        </button>
-                    </div>
-                    <div
-                        class="col-start-4 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
-                    >
-                        <button
-                            type="button"
-                            @click="insertSymbol('「」')"
-                            class="col-start-1 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
-                        >
-                            「」
-                        </button>
-                        <button
-                            type="button"
-                            @click="insertSymbol('......')"
-                            class="col-start-2 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
-                        >
-                            …
-                        </button>
-                    </div>
-                    <div
-                        class="col-start-5 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
-                    >
-                        <button
-                            type="button"
-                            @click="insertSymbol('――')"
-                            class="col-start-1 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
-                        >
-                            ―
-                        </button>
-                        <button
-                            type="button"
-                            @click="insertSymbol('　')"
-                            class="col-start-2 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
-                        >
-                            ␣
-                        </button>
-                    </div>
-                    <div
-                        class="col-start-6 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
-                    >
-                        <button
-                            type="button"
-                            @click="insertSymbol('｜《》')"
-                            class="col-start-1 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
-                        >
-                            ルビ
-                        </button>
-                        <button
-                            type="button"
-                            @click="insertSymbol('｜【】')"
-                            class="col-start-2 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
-                        >
-                            傍点
-                        </button>
-                    </div>
-                    <div
-                        class="col-start-7 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
-                    >
-                        <button
-                            type="submit"
-                            class="col-start-1 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
+                            @click="openNovelDetails(novel)"
+                            class="truncate w-full h-full px-1 text-left font-semibold text-sm sm:text-xl text-blue-500 hover:underline"
                         >
                             <img
-                                :src="'/images/icon_save.png'"
-                                alt="保存"
-                                class="object-contain h-full w-full"
-                            />
+                                :src="'/images/icon_edit.png'"
+                                alt="タイトル編集"
+                                class="inline object-contain h-full"
+                            />{{ novel.title }}
                         </button>
-                        <button
-                            type="button"
-                            class="col-start-2 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
-                        >
-                            <img
-                                :src="'/images/icon_output.png'"
-                                alt="出力"
-                                class="object-contain h-full w-full"
-                            />
-                        </button>
-                    </div>
-                </menu>
-            </form>
+                    </label>
+                </div>
+                <div
+                    class="col-start-3 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
+                >
+                    <button
+                        type="button"
+                        @click="insertSymbol('｜＃＃')"
+                        class="col-start-2 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
+                    >
+                        見出し
+                    </button>
+                </div>
+                <div
+                    class="col-start-4 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
+                >
+                    <button
+                        type="button"
+                        @click="insertSymbol('「」')"
+                        class="col-start-1 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
+                    >
+                        「」
+                    </button>
+                    <button
+                        type="button"
+                        @click="insertSymbol('......')"
+                        class="col-start-2 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
+                    >
+                        …
+                    </button>
+                </div>
+                <div
+                    class="col-start-5 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
+                >
+                    <button
+                        type="button"
+                        @click="insertSymbol('――')"
+                        class="col-start-1 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
+                    >
+                        ―
+                    </button>
+                    <button
+                        type="button"
+                        @click="insertSymbol('　')"
+                        class="col-start-2 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
+                    >
+                        ␣
+                    </button>
+                </div>
+                <div
+                    class="col-start-6 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
+                >
+                    <button
+                        type="button"
+                        @click="insertSymbol('｜《》')"
+                        class="col-start-1 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
+                    >
+                        ルビ
+                    </button>
+                    <button
+                        type="button"
+                        @click="insertSymbol('｜【】')"
+                        class="col-start-2 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
+                    >
+                        傍点
+                    </button>
+                </div>
+                <div
+                    class="col-start-7 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
+                >
+                    <button
+                        type="submit"
+                        class="col-start-1 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
+                    >
+                        <img
+                            :src="'/images/icon_save.png'"
+                            alt="保存"
+                            class="object-contain h-full w-full"
+                        />
+                    </button>
+                    <button
+                        type="button"
+                        class="col-start-2 border-2 rounded-lg truncate text-xs sm:text-base hover:bg-gray-100 active:bg-gray-200"
+                    >
+                        <img
+                            :src="'/images/icon_output.png'"
+                            alt="出力"
+                            class="object-contain h-full w-full"
+                        />
+                    </button>
+                </div>
+            </menu>
         </template>
 
         <form @submit.prevent="submit" class="h-full">
@@ -190,7 +211,7 @@ span.dot {
                     >
                         <textarea
                             @keydown.ctrl.s="submit"
-                            v-model="form.body"
+                            v-model="novel.body"
                             class="resize-none w-full h-full border-none"
                         ></textarea>
                     </div>
@@ -209,5 +230,12 @@ span.dot {
                 </div>
             </div>
         </form>
+
+        <NovelDetailsModal
+            v-show="showNovelDetails"
+            @close="closeNovelDetails"
+            :presentShowNovel="novel"
+            :user="user"
+        />
     </BreezeAuthenticatedLayout>
 </template>
