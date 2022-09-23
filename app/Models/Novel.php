@@ -14,7 +14,7 @@ class Novel extends Model
         'body',
         'user_id',
         'output_setting_template_id',
-        'author'
+        'author',
     ];
 
     /* Relation */
