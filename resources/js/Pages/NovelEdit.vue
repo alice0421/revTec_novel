@@ -7,14 +7,15 @@ const props = defineProps({
     id: Number,
     title: String,
     body: String,
-    user_id: Number,
     output_setting_template_id: Number,
+    author: String,
 });
 
 const form = useForm({
     title: props.title,
     body: props.body,
     output_setting_template_id: props.output_setting_template_id,
+    author: props.author,
 });
 
 // 保存機能

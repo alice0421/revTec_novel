@@ -58,7 +58,7 @@ class NovelController extends Controller
             'id' => $novel->id,
             'title' => $novel->title,
             'body' => $novel->body,
-            'user_id' => $novel->user_id,
+            'author' => $novel->author,
             'output_setting_template_id' => $novel->output_setting_template_id,
         ]);
     }
@@ -75,8 +75,8 @@ class NovelController extends Controller
         $novel->where('id', $novel->id)->update([
             'title' => $request->title,
             'body' => $request->body,
-            'output_setting_template_id' => $request->output_setting_template_id,
             'author' => $request->author,
+            'output_setting_template_id' => $request->output_setting_template_id,
         ]);
     }
 }
