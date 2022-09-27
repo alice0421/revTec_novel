@@ -13,7 +13,7 @@ const props = defineProps({
 
 const submit = (e) => {
     e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
-    // 小説一覧画面の時のみリダイレクト
+    // 小説一覧画面の時のみリロード
     if (props.redirect) {
         axios
             .post(`/novels/${props.presentShowNovel.id}/update`, {
@@ -23,7 +23,7 @@ const submit = (e) => {
                 is_done: props.presentShowNovel.is_done,
             })
             .then(function (response) {
-                location.href = "/novels";
+                location.reload();
             })
             .catch((error) => {
                 console.log(error);

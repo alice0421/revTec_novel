@@ -82,15 +82,48 @@ class NovelController extends Controller
     }
 
     // 小説をもっと見る
-    public function more()
+    public function more(Request $request)
     {
         $user = User::where('id', Auth::id())->first();
-        return Inertia::render('NovelsMore', [
-            'novels' => $user
-                ->novels()
-                ->latest('updated_at')
-                ->get(),
-            'user' =>  Auth::user(),
-        ]);
+        if($request->category=='最近更新した小説'){
+            return Inertia::render('NovelsMore', [
+                'novels' => $user
+                    ->novels()
+                    ->latest('updated_at')
+                    ->get(),
+                'category' => $request->category,
+                'user' =>  Auth::user(),
+            ]);
+        }else if($request->category=='執筆中の小説'){
+            return Inertia::render('NovelsMore', [
+                'novels' => $user
+                    ->novels()
+                    ->where('is_done', false)
+                    ->latest('updated_at')
+                    ->get(),
+                'category' => $request->category,
+                'user' =>  Auth::user(),
+            ]);
+        }else if($request->category=='執筆完了した小説'){
+            return Inertia::render('NovelsMore', [
+                'novels' => $user
+                    ->novels()
+                    ->where('is_done', true)
+                    ->latest('updated_at')
+                    ->get(),
+                'category' => $request->category,
+                'user' =>  Auth::user(),
+            ]);
+        }else{ // カテゴリーごと
+            // return Inertia::render('NovelsMore', [
+            //     'novels' => $user
+            //         ->novels()
+            //         ->where('category_id', 1)
+            //         ->latest('updated_at')
+            //         ->get(),
+            //     'category' => $request->category,
+            //     'user' =>  Auth::user(),
+            // ]);
+        }
     }
 }

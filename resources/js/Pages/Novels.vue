@@ -26,13 +26,19 @@ const props = defineProps({
                 name="最近更新した小説"
                 :novels="novels_latest"
                 :user="user"
-                :moreURL="route('novelsMore')"
+                moreURL="/novels/more?category=最近更新した小説"
             />
-            <Carousel name="執筆中の小説" :novels="novels_doing" :user="user" />
+            <Carousel
+                name="執筆中の小説"
+                :novels="novels_doing"
+                :user="user"
+                moreURL="/novels/more?category=執筆中の小説"
+            />
             <Carousel
                 name="執筆完了した小説"
                 :novels="novels_done"
                 :user="user"
+                moreURL="/novels/more?category=執筆完了した小説"
             />
         </div>
     </BreezeAuthenticatedLayout>
