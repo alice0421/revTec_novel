@@ -37,19 +37,12 @@ class NovelController extends Controller
         $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
+            'is_done' => 'required|integer',
             'user_id' => 'required|integer',
-            'output_setting_template_id' => 'required|integer'
         ]);
 
         $form = $request->all();
         $newNovel = $novel->create($form);
-
-        // $newNovel = $novel->create([
-        //     'title' => $request->title,
-        //     'body' => $request->body,
-        //     'user_id' => $request->user_id,
-        //     'output_setting_template_id' => $request->output_setting_template_id,
-        // ]);
 
         return redirect()->route('novelEdit', $newNovel->id);
     }
@@ -59,11 +52,6 @@ class NovelController extends Controller
     {
         return Inertia::render('NovelEdit', [
             'novel' => $novel->where("id", $novel->id)->first(), 
-            // 'id' => $novel->id,
-            // 'title' => $novel->title,
-            // 'body' => $novel->body,
-            // 'author' => $novel->author,
-            // 'output_setting_template_id' => $novel->output_setting_template_id,
             'user' =>  Auth::user(),
         ]);
     }
@@ -74,9 +62,9 @@ class NovelController extends Controller
         $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
-            'output_setting_template_id' => 'required|integer',
+            'is_done' => 'required|integer',
+            // authorはNULLable
         ]);
-        // authorはNULLable
 
         $form = $request->all();
         $novel->fill($form)->save(); // 差分なしは変更しない

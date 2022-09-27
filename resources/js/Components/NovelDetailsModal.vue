@@ -16,9 +16,8 @@ const submit = (e) => {
         .post(`/novels/${props.presentShowNovel.id}/update`, {
             title: props.presentShowNovel.title,
             body: props.presentShowNovel.body,
-            output_setting_template_id:
-                props.presentShowNovel.output_setting_template_id,
             author: props.presentShowNovel.author,
+            is_done: props.presentShowNovel.is_done,
         })
         .then(function (response) {})
         .catch((error) => {
@@ -169,11 +168,11 @@ function showPreview(txt) {
                         </div>
                         <div class="row-start-5 row-end-6">
                             <select
-                                name="novel-state"
+                                v-model="presentShowNovel.is_done"
                                 class="text-xs sm:text-base border-2 border-zinc-200 rounded-xl"
                             >
-                                <option value="continue">執筆中</option>
-                                <option value="finish">執筆完了</option>
+                                <option value="0">執筆中</option>
+                                <option value="1">執筆完了</option>
                             </select>
                         </div>
                     </menu>

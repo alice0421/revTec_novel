@@ -6,20 +6,8 @@ import { ref, computed } from "vue";
 
 const props = defineProps({
     novel: Object,
-    // id: Number,
-    // title: String,
-    // body: String,
-    // output_setting_template_id: Number,
-    // author: String,
     user: Object,
 });
-
-// const form = useForm({
-//     title: props.title,
-//     body: props.body,
-//     output_setting_template_id: props.output_setting_template_id,
-//     author: props.author,
-// });
 
 // 保存機能
 const submit = (e) => {
@@ -28,8 +16,8 @@ const submit = (e) => {
         .post(`/novels/${props.novel.id}/update`, {
             title: props.novel.title,
             body: props.novel.body,
-            output_setting_template_id: props.novel.output_setting_template_id,
             author: props.novel.author,
+            is_done: props.novel.is_done,
         })
         .then(function (response) {})
         .catch((error) => {

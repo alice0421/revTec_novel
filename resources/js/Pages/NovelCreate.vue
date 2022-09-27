@@ -9,7 +9,7 @@ const form = useForm({
     title: "",
     body: "",
     user_id: user,
-    output_setting_template_id: 1,
+    is_done: 0,
 });
 
 // 保存機能
