@@ -12,9 +12,10 @@ class Novel extends Model
     protected $fillable = [
         'title',
         'body',
-        'user_id',
-        'output_setting_template_id',
         'author',
+        'is_done',
+        'user_id',
+        'series_id'
     ];
 
     /* Relation */

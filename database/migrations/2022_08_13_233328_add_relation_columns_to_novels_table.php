@@ -14,8 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::table('novels', function (Blueprint $table) {
+            $table->foreignId('user_id')->constrained('users');
             $table->foreignId('series_id')->nullable()->constrained('series');
-            $table->foreignId('output_setting_template_id')->constrained('output_setting_templates');
+            // $table->foreignId('output_setting_template_id')->constrained('output_setting_templates');
         });
     }
 
