@@ -46,7 +46,13 @@ Route::get('/novels/{novel}/edit', [NovelController::class, 'edit'])
 // 既存小説保存
 Route::post('/novels/{novel}/update', [NovelController::class, 'update'])
 ->name('novelUpdate');
+
+// 小説をもっと見る
+Route::get('/novels/more', [NovelController::class, 'more'])
+->name('novelsMore');
 });
+
+
 
 require __DIR__.'/auth.php'; /* auth関係のルーティングを呼び出し(基本はweb.php) */
 

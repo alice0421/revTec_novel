@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Novel;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Providers\RouteServiceProvider;
@@ -14,10 +15,22 @@ class NovelController extends Controller
     // 小説一覧画面の表示
     public function index()
     {
-        $user = User::where("id", Auth::id())->first();
+        $user = User::where('id', Auth::id())->first();
         return Inertia::render('Novels', [
-            'novels' => $user
+            'novels_latest' => $user
                 ->novels()
+                ->latest('updated_at')
+                ->limit(10)
+                ->get(),
+            'novels_doing' => $user
+                ->novels()
+                ->where('is_done', false)
+                ->latest('updated_at')
+                ->limit(10)
+                ->get(),
+            'novels_done' => $user
+                ->novels()
+                ->where('is_done', true)
                 ->latest('updated_at')
                 ->limit(10)
                 ->get(),
@@ -41,8 +54,7 @@ class NovelController extends Controller
             'user_id' => 'required|integer',
         ]);
 
-        $form = $request->all();
-        $newNovel = $novel->create($form);
+        $newNovel = $novel->create($request->only(['title', 'body', 'is_done', 'user_id']));
 
         return redirect()->route('novelEdit', $newNovel->id);
     }
@@ -63,10 +75,22 @@ class NovelController extends Controller
             'title' => 'required|string',
             'body' => 'required|string',
             'is_done' => 'required|integer',
-            // authorはNULLable
+            // authorはNULL able
         ]);
 
-        $form = $request->all();
-        $novel->fill($form)->save(); // 差分なしは変更しない
+        $novel->fill($request->only(['title', 'body', 'author', 'is_done']))->save();
+    }
+
+    // 小説をもっと見る
+    public function more()
+    {
+        $user = User::where('id', Auth::id())->first();
+        return Inertia::render('NovelsMore', [
+            'novels' => $user
+                ->novels()
+                ->latest('updated_at')
+                ->get(),
+            'user' =>  Auth::user(),
+        ]);
     }
 }

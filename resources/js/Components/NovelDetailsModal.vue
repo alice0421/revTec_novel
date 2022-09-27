@@ -8,21 +8,39 @@ defineEmits(["close"]);
 const props = defineProps({
     presentShowNovel: Object,
     user: Object,
+    redirect: String,
 });
 
 const submit = (e) => {
     e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
-    axios
-        .post(`/novels/${props.presentShowNovel.id}/update`, {
-            title: props.presentShowNovel.title,
-            body: props.presentShowNovel.body,
-            author: props.presentShowNovel.author,
-            is_done: props.presentShowNovel.is_done,
-        })
-        .then(function (response) {})
-        .catch((error) => {
-            console.log(error);
-        });
+    // 小説一覧画面の時のみリダイレクト
+    if (props.redirect) {
+        axios
+            .post(`/novels/${props.presentShowNovel.id}/update`, {
+                title: props.presentShowNovel.title,
+                body: props.presentShowNovel.body,
+                author: props.presentShowNovel.author,
+                is_done: props.presentShowNovel.is_done,
+            })
+            .then(function (response) {
+                location.href = "/novels";
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    } else {
+        axios
+            .post(`/novels/${props.presentShowNovel.id}/update`, {
+                title: props.presentShowNovel.title,
+                body: props.presentShowNovel.body,
+                author: props.presentShowNovel.author,
+                is_done: props.presentShowNovel.is_done,
+            })
+            .then(function (response) {})
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 };
 
 function showPreview(txt) {
@@ -107,20 +125,22 @@ function showPreview(txt) {
                         <input
                             v-model="presentShowNovel.title"
                             @keydown.ctrl.s="submit"
-                            class="truncate mb-3 text-xl sm:text-2xl font-bold text-gray-800 border-solid border-2 border-zinc-400"
+                            class="truncate w-full sm:max-w-md mb-3 text-xl sm:text-2xl font-bold text-gray-800 border-solid border-2 border-zinc-400"
                         />
 
-                        <h5 class="text-xs sm:text-sm text-gray-400">著者</h5>
+                        <h5 class="text-xs sm:text-sm text-gray-400">
+                            著者（{{ user.name }}）
+                        </h5>
                         <div
                             class="truncate mb-3 text-sm sm:text-base font-medium text-gray-800"
                         >
-                            <div class="text-gray-800">
+                            <div class="w-full text-gray-800">
                                 <input
                                     @keydown.ctrl.s="submit"
                                     :placeholder="user.author"
                                     v-model="presentShowNovel.author"
-                                    class="truncate border-solid border-2 border-zinc-400"
-                                />（{{ user.name }}）
+                                    class="truncate w-1/2 sm:max-w-xs border-solid border-2 border-zinc-400"
+                                />
                             </div>
                         </div>
 
@@ -152,7 +172,7 @@ function showPreview(txt) {
                                 ><li
                                     class="py-2 my-2 w-3/5 mx-auto bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-lg text-gray-600 font-medium"
                                 >
-                                    執筆画面へ
+                                    執筆
                                 </li></a
                             >
                             <li

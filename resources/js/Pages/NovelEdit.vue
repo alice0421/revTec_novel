@@ -83,7 +83,7 @@ span.dot {
                         >
                             <img
                                 :src="'/images/icon_edit.png'"
-                                alt="タイトル編集"
+                                alt="小説情報編集"
                                 class="inline object-contain h-full"
                             />{{ novel.title }}
                         </button>
@@ -154,7 +154,8 @@ span.dot {
                         傍点
                     </button>
                 </div>
-                <div
+                <form
+                    @submit.prevent="submit"
                     class="col-start-7 h-full text-center grid grid-cols-2 grid-rows-1 gap-2"
                 >
                     <button
@@ -177,7 +178,7 @@ span.dot {
                             class="object-contain h-full w-full"
                         />
                     </button>
-                </div>
+                </form>
             </menu>
         </template>
 
