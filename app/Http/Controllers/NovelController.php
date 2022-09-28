@@ -78,7 +78,9 @@ class NovelController extends Controller
             // authorはNULL able
         ]);
 
-        $novel->fill($request->only(['title', 'body', 'author', 'is_done']))->save();
+        $novel->fill($request->only(['title', 'body', 'author']))->save();
+        $novel->timestamps = false;
+        $novel->fill($request->only(['is_done']))->save();
     }
 
     // 小説をもっと見る

@@ -14,33 +14,21 @@ const props = defineProps({
 const submit = (e) => {
     e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
     // 小説一覧画面の時のみリロード
-    if (props.redirect) {
-        axios
-            .post(`/novels/${props.presentShowNovel.id}/update`, {
-                title: props.presentShowNovel.title,
-                body: props.presentShowNovel.body,
-                author: props.presentShowNovel.author,
-                is_done: props.presentShowNovel.is_done,
-            })
-            .then(function (response) {
+    axios
+        .post(`/novels/${props.presentShowNovel.id}/update`, {
+            title: props.presentShowNovel.title,
+            body: props.presentShowNovel.body,
+            author: props.presentShowNovel.author,
+            is_done: props.presentShowNovel.is_done,
+        })
+        .then(function (response) {
+            if (props.redirect) {
                 location.reload();
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    } else {
-        axios
-            .post(`/novels/${props.presentShowNovel.id}/update`, {
-                title: props.presentShowNovel.title,
-                body: props.presentShowNovel.body,
-                author: props.presentShowNovel.author,
-                is_done: props.presentShowNovel.is_done,
-            })
-            .then(function (response) {})
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 };
 
 function showPreview(txt) {

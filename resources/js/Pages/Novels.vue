@@ -21,7 +21,7 @@ const props = defineProps({
             </h2>
         </template>
 
-        <div class="bg-white py-2 px-4 w-full h-full sm:px-16">
+        <div class="bg-white py-2 px-4 w-full sm:px-16">
             <Carousel
                 name="最近更新した小説"
                 :novels="novels_latest"
