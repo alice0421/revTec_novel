@@ -56,6 +56,7 @@ class NovelController extends Controller
 
         $newNovel = $novel->create($request->only(['title', 'body', 'is_done', 'user_id']));
 
+        session()->flash('saveMessage', '✓新規保存しました');
         return redirect()->route('novelEdit', $newNovel->id);
     }
 

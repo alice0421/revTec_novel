@@ -33,7 +33,7 @@ const props = defineProps({
         <div
             id="flash_message"
             v-show="isShow"
-            class="absolute bottom-0 right-0 text-sm sm:text-base text-white px-4 py-2 m-4 sm:my-4 sm:mx-8 bg-green-400 rounded-md"
+            class="absolute bottom-0 right-0 text-sm sm:text-base text-white px-4 py-2 m-4 sm:my-4 sm:mx-8 bg-red-400 rounded-md"
         >
             {{ message }}
         </div>

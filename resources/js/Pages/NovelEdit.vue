@@ -1,9 +1,10 @@
 <script setup>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
-import { Head } from "@inertiajs/inertia-vue3";
+import { Head, usePage } from "@inertiajs/inertia-vue3";
 import NovelDetailsModal from "@/Components/NovelDetailsModal.vue";
 import FlashMessage from "@/Components/FlashMessage.vue";
-import { ref, computed } from "vue";
+import ErrorMessage from "@/Components/ErrorMessage.vue";
+import { ref, computed, onMounted } from "vue";
 
 const props = defineProps({
     novel: Object,
@@ -13,6 +14,16 @@ const props = defineProps({
 // 保存機能
 const saveMessage = ref("");
 const isShowSaveMessage = ref(false);
+// 新規保存からの遷移時のみ
+if (usePage().props.value.flash.saveMessage)
+    onMounted(() => {
+        saveMessage.value = usePage().props.value.flash.saveMessage;
+        isShowSaveMessage.value = true;
+        setTimeout(() => {
+            isShowSaveMessage.value = false;
+        }, 1000);
+    });
+// 既存保存
 const submit = (e) => {
     e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
     axios

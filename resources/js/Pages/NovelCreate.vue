@@ -1,6 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head, useForm, usePage } from "@inertiajs/inertia-vue3";
+import ErrorMessage from "@/Components/ErrorMessage.vue";
 import { ref, computed } from "vue";
 
 const user = usePage().props.value.auth.user.id; // user_idを取得
@@ -13,9 +14,17 @@ const form = useForm({
 });
 
 // 保存機能
+const isShowErrorMessage = ref(false);
 const submit = (e) => {
     e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
-    form.post(route("novelStore"), {});
+    form.post(route("novelStore"), {
+        onError: () => {
+            isShowErrorMessage.value = true;
+            setTimeout(() => {
+                isShowErrorMessage.value = false;
+            }, 1000);
+        },
+    });
 };
 
 // 記号挿入機能
@@ -70,6 +79,7 @@ span.dot {
                                     タイトル
                                 </h5>
                                 <input
+                                    @keydown.ctrl.s="submit"
                                     v-model="form.title"
                                     placeholder="新規小説タイトル"
                                     id="titleEdit"
@@ -210,5 +220,10 @@ span.dot {
                 </div>
             </div>
         </form>
+
+        <ErrorMessage
+            :isShow="isShowErrorMessage"
+            message="タイトルと本文を入力してください"
+        />
     </BreezeAuthenticatedLayout>
 </template>

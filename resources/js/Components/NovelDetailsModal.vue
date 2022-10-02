@@ -166,7 +166,7 @@ function showPreview(txt) {
                             class="border-2 border-zinc-200 rounded-xl py-2 sm:py-5 row-start-1 row-end-5"
                         >
                             <a
-                                v-if="presentShowNovel.id & !canEdit"
+                                v-if="presentShowNovel.id && !canEdit"
                                 :href="route('novelEdit', presentShowNovel.id)"
                                 for="edit"
                             >
