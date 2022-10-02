@@ -83,7 +83,7 @@ class NovelController extends Controller
         $novel->timestamps = false;
         $novel->fill($request->only(['is_done']))->save();
 
-        return "保存しました";
+        return "✓保存しました";
     }
 
     // 小説をもっと見る

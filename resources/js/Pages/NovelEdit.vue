@@ -2,7 +2,7 @@
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import NovelDetailsModal from "@/Components/NovelDetailsModal.vue";
-// import ShowMessage from "@/Components/ShowMessage.vue";
+import FlashMessage from "@/Components/FlashMessage.vue";
 import { ref, computed } from "vue";
 
 const props = defineProps({
@@ -11,6 +11,8 @@ const props = defineProps({
 });
 
 // 保存機能
+const saveMessage = ref("");
+const isShowSaveMessage = ref(false);
 const submit = (e) => {
     e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
     axios
@@ -20,7 +22,13 @@ const submit = (e) => {
             author: props.novel.author,
             is_done: props.novel.is_done,
         })
-        .then(function (response) {})
+        .then(function (response) {
+            saveMessage.value = response.data;
+            isShowSaveMessage.value = true;
+            setTimeout(() => {
+                isShowSaveMessage.value = false;
+            }, 1000);
+        })
         .catch((error) => {
             console.log(error);
         });
@@ -228,5 +236,7 @@ span.dot {
             :user="user"
             :canEdit="true"
         />
+
+        <FlashMessage :isShow="isShowSaveMessage" :message="saveMessage" />
     </BreezeAuthenticatedLayout>
 </template>

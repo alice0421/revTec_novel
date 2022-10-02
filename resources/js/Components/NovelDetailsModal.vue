@@ -1,7 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
-import { ref } from "vue";
 import axios from "axios";
 
 defineEmits(["close"]);
@@ -21,9 +20,7 @@ const submit = (e) => {
                 author: props.presentShowNovel.author,
                 is_done: props.presentShowNovel.is_done,
             })
-            .then(function (response) {
-                console.log(response.data);
-            })
+            .then(function (response) {})
             .catch((error) => {
                 console.log(error);
             });
@@ -79,6 +76,7 @@ function showPreview(txt) {
 
 <template>
     <div class="z-20 fixed top-0 left-0 w-full h-full bg-black/50">
+        {{ saveMessage }}
         <form @submit.prevent="submit">
             <button
                 id="modal-button"
