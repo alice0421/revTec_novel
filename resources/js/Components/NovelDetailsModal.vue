@@ -8,27 +8,26 @@ defineEmits(["close"]);
 const props = defineProps({
     presentShowNovel: Object,
     user: Object,
-    redirect: String,
+    canEdit: Boolean,
 });
 
 const submit = (e) => {
-    e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
-    // 小説一覧画面の時のみリロード
-    axios
-        .post(`/novels/${props.presentShowNovel.id}/update`, {
-            title: props.presentShowNovel.title,
-            body: props.presentShowNovel.body,
-            author: props.presentShowNovel.author,
-            is_done: props.presentShowNovel.is_done,
-        })
-        .then(function (response) {
-            if (props.redirect) {
-                location.reload();
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    if (props.canEdit) {
+        e.preventDefault(); // ブラウザの保存ショートカットキーを無効化
+        axios
+            .post(`/novels/${props.presentShowNovel.id}/update`, {
+                title: props.presentShowNovel.title,
+                body: props.presentShowNovel.body,
+                author: props.presentShowNovel.author,
+                is_done: props.presentShowNovel.is_done,
+            })
+            .then(function (response) {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 };
 
 function showPreview(txt) {
@@ -93,7 +92,6 @@ function showPreview(txt) {
                 id="modal"
                 class="fixed bottom-0 z-30 w-full h-[calc(100vh-82px)] sm:h-[calc(100vh-130px)] p-4 overflow-y-auto bg-white"
             >
-                <!-- <slot /> -->
                 <div
                     class="max-w-[90rem] lg:mx-auto sm:px-4 h-full grid grid-cols-3 grid-rows-1 gap-5"
                 >
@@ -111,10 +109,17 @@ function showPreview(txt) {
                             タイトル
                         </h5>
                         <input
+                            v-if="canEdit"
                             v-model="presentShowNovel.title"
                             @keydown.ctrl.s="submit"
                             class="truncate w-full sm:max-w-md mb-3 text-xl sm:text-2xl font-bold text-gray-800 border-solid border-2 border-zinc-400"
                         />
+                        <p
+                            v-else
+                            class="truncate w-full sm:max-w-md mb-3 text-xl sm:text-2xl font-bold text-gray-800"
+                        >
+                            {{ presentShowNovel.title }}
+                        </p>
 
                         <h5 class="text-xs sm:text-sm text-gray-400">
                             著者（{{ user.name }}）
@@ -124,10 +129,18 @@ function showPreview(txt) {
                         >
                             <div class="w-full text-gray-800">
                                 <input
+                                    v-if="canEdit"
                                     @keydown.ctrl.s="submit"
                                     :placeholder="user.author"
                                     v-model="presentShowNovel.author"
                                     class="truncate w-1/2 sm:max-w-xs border-solid border-2 border-zinc-400"
+                                />
+                                <input
+                                    v-else
+                                    :disabled="!canEdit"
+                                    :placeholder="user.author"
+                                    v-model="presentShowNovel.author"
+                                    class="truncate w-1/2 sm:max-w-xs bg-white"
                                 />
                             </div>
                         </div>
@@ -155,14 +168,24 @@ function showPreview(txt) {
                             class="border-2 border-zinc-200 rounded-xl py-2 sm:py-5 row-start-1 row-end-5"
                         >
                             <a
-                                v-if="presentShowNovel.id"
+                                v-if="presentShowNovel.id & !canEdit"
                                 :href="route('novelEdit', presentShowNovel.id)"
-                                ><li
+                                for="edit"
+                            >
+                                <li
+                                    v-if="!canEdit"
                                     class="py-2 my-2 w-3/5 mx-auto bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-lg text-gray-600 font-medium"
                                 >
                                     執筆
-                                </li></a
+                                </li>
+                            </a>
+                            <li
+                                v-else
+                                class="py-2 my-2 w-3/5 mx-auto bg-gray-200 rounded-lg text-gray-600 font-medium"
                             >
+                                執筆
+                            </li>
+
                             <li
                                 class="py-2 my-2 w-3/5 mx-auto bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-lg text-gray-600 font-medium"
                             >
@@ -176,6 +199,7 @@ function showPreview(txt) {
                         </div>
                         <div class="row-start-5 row-end-6">
                             <select
+                                :disabled="!canEdit"
                                 v-model="presentShowNovel.is_done"
                                 class="text-xs sm:text-base border-2 border-zinc-200 rounded-xl"
                             >

@@ -2,6 +2,7 @@
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import NovelDetailsModal from "@/Components/NovelDetailsModal.vue";
+// import ShowMessage from "@/Components/ShowMessage.vue";
 import { ref, computed } from "vue";
 
 const props = defineProps({
@@ -225,6 +226,7 @@ span.dot {
             @close="closeNovelDetails"
             :presentShowNovel="novel"
             :user="user"
+            :canEdit="true"
         />
     </BreezeAuthenticatedLayout>
 </template>

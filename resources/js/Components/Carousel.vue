@@ -206,6 +206,6 @@ span.dot {
         @close="closeNovelDetails"
         :presentShowNovel="presentShowNovel"
         :user="user"
-        redirect="true"
+        :canEdit="false"
     />
 </template>

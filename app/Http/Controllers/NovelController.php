@@ -79,8 +79,11 @@ class NovelController extends Controller
         ]);
 
         $novel->fill($request->only(['title', 'body', 'author']))->save();
+        // is_doneの変更(執筆中/執筆完了)ではupdated_atを更新させない
         $novel->timestamps = false;
         $novel->fill($request->only(['is_done']))->save();
+
+        return "保存しました";
     }
 
     // 小説をもっと見る
