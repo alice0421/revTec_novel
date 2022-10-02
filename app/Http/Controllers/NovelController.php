@@ -24,13 +24,13 @@ class NovelController extends Controller
                 ->get(),
             'novels_doing' => $user
                 ->novels()
-                ->where('is_done', 0)
+                ->where('is_done', false)
                 ->latest('updated_at')
                 ->limit(10)
                 ->get(),
             'novels_done' => $user
                 ->novels()
-                ->where('is_done', 1)
+                ->where('is_done', true)
                 ->latest('updated_at')
                 ->limit(10)
                 ->get(),
@@ -50,7 +50,7 @@ class NovelController extends Controller
         $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
-            'is_done' => 'required|integer',
+            'is_done' => 'required',
             'user_id' => 'required|integer',
         ]);
 
@@ -75,7 +75,7 @@ class NovelController extends Controller
         $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
-            'is_done' => 'required|integer',
+            'is_done' => 'required',
             // authorはNULL able
         ]);
 
