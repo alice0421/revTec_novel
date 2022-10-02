@@ -196,7 +196,7 @@ function showPreview(txt) {
                             </li>
                         </div>
                         <div class="row-start-5 row-end-6">
-                            {{ presentShowNovel.is_done }}
+                            {{ Number(presentShowNovel.is_done) }}
                             <select
                                 :disabled="!canEdit"
                                 v-model="presentShowNovel.is_done"
