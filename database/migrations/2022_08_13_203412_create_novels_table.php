@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->mediumText('body');
             $table->string('author')->nullable();
-            $table->boolean('is_done');
+            $table->integer('is_done');
             // $table->string('image')->nullable();
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at', $precision = 0);

@@ -24,13 +24,13 @@ class NovelController extends Controller
                 ->get(),
             'novels_doing' => $user
                 ->novels()
-                ->where('is_done', false)
+                ->where('is_done', 0)
                 ->latest('updated_at')
                 ->limit(10)
                 ->get(),
             'novels_done' => $user
                 ->novels()
-                ->where('is_done', true)
+                ->where('is_done', 1)
                 ->latest('updated_at')
                 ->limit(10)
                 ->get(),
@@ -50,7 +50,7 @@ class NovelController extends Controller
         $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
-            'is_done' => 'required',
+            'is_done' => 'required|integer',
             'user_id' => 'required|integer',
         ]);
 
@@ -75,7 +75,7 @@ class NovelController extends Controller
         $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
-            'is_done' => 'required',
+            'is_done' => 'required|integer',
             // authorはNULL able
         ]);
 
@@ -104,7 +104,7 @@ class NovelController extends Controller
             return Inertia::render('NovelsMore', [
                 'novels' => $user
                     ->novels()
-                    ->where('is_done', false)
+                    ->where('is_done', 0)
                     ->latest('updated_at')
                     ->get(),
                 'category' => $request->category,
@@ -114,7 +114,7 @@ class NovelController extends Controller
             return Inertia::render('NovelsMore', [
                 'novels' => $user
                     ->novels()
-                    ->where('is_done', true)
+                    ->where('is_done', 1)
                     ->latest('updated_at')
                     ->get(),
                 'category' => $request->category,
