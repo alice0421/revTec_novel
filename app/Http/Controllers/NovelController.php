@@ -50,7 +50,7 @@ class NovelController extends Controller
         $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
-            'is_done' => 'required',
+            'is_done' => 'required|integer',
             'user_id' => 'required|integer',
         ]);
 
@@ -75,7 +75,7 @@ class NovelController extends Controller
         $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
-            'is_done' => 'required',
+            'is_done' => 'required|integer',
             // authorはNULL able
         ]);
 
