@@ -1,64 +1,60 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# 文GO ～小説執筆ツール～
+## アプリを作った背景
+Markdownにはリアルタイムプレビューがよくあるが、自分が知る限り小説執筆サイトにはない。
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+そのため、リアルタイムプレビューを搭載した小説執筆サイトを作成しようと考えた。
 
-## About Laravel
+## 開発環境
+Docker
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Vue.js　HTML/CSS　Tailwind CSS　axios
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Laravel9　Inertia.js　MySQL
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## デモ
+- アプリURL: https://novel-tool.herokuapp.com
+- Github: https://github.com/alice0421/writing_novel.git
+- テストアカウント
+    - Email: test@gmail.com
+    - Password: test2022
 
-## Learning Laravel
+## 機能
+### 小説一覧
+- 以下の3つにカテゴリ分け
+    - 最近更新した小説
+    - 執筆中の小説
+    - 執筆完了した小説
+- SPAによる小説詳細画面
+    - モーダルの使用
+    - モーダルをコンポーネント化し、"小説執筆画面"で再利用
+- 自作カルーセル使用
+    - 画面サイズの変更に対応
+- もっと見る機能
+    - 各カテゴリには最大10件のみ表示
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 小説執筆画面
+- タイトル、本文、著者名の編集
+    - コンポーネント化した小説詳細画面を再利用
+    - 著者名の記述がなければ、ユーザーが登録済みのペンネームを表示
+- リアルタイム縦書きプレビュー
+- 見出し、ルビ、傍点の挿入ボタン
+    - 正規表現の使用
+- 保存時のUI / UX
+    - 画面上のボタン以外にも、ショートカットキー（Ctrl + S）での保存可能
+    - 保存完了時、一定時間後に自動消失するフラッシュメッセージを表示
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 新規小説作成画面
+- タイトル＆本文未記入時にフラッシュメッセージでエラーを表示
+    - バリエーションエラーを使用
+- 新規保存完了時にフラッシュメッセージを表示
+    - 小説執筆画面で表示される、既存の小説を更新保存する際に出るフラッシュメッセージとは別のメッセージを表示
+- 新規保存完了後に、"小説執筆画面"にリダイレクト
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 課題・将来性
+- 小説一覧の読込の遅さ
+    - DBから長い本文を全て持ってきている
+- もっと見る機能が数件ずつ追加表示ではない
+    - DBから全件持ってくることの無駄さ
+- 小説削除機能と複製機能の追加
+- 任意に命名したシリーズごとのカテゴリ分け機能の追加
+- 小説執筆画面にメモ機能やアウトライン機能の追加
